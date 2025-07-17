@@ -1,3 +1,5 @@
+import component from 'element-plus/es/components/tree-select/src/tree-select-option.mjs';
+
 export const constantRoute = [
   {
     path: '/',
@@ -49,6 +51,16 @@ export const constantRoute = [
     path: '/404',
     name: '404',
     component: () => import('@/views/404.vue'),
+  },
+  {
+    path: '/problem/{id}',
+    name: 'problem',
+    component: () => import('@/views/ProblemView.vue'),
+  },
+  {
+    path: '/status/{id}',
+    name: 'status',
+    component: () => import('@/views/StatusView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
