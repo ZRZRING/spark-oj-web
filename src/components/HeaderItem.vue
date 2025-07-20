@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRouter,useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElNotification } from 'element-plus';
 
 const userStore = useUserStore();
-const activeName = ref('home');
+const activeName = computed(() => {
+  return route.path.split('/')[1];
+})
 const router = useRouter();
+const route = useRoute();
 
 const handleLogin = () => {
   if (userStore.token) {
@@ -42,7 +45,7 @@ const handleSelect = (key: string) => {
 
 <template>
   <div class="header">
-    <el-menu mode="horizontal" v-model="activeName" class="nav-menu" default-active="home" @select="handleSelect">
+    <el-menu mode="horizontal" class="nav-menu" :default-active="activeName" @select="handleSelect" router>
       <div class="logo">
         <img src="/spoj.ico" alt="logo" width="32px" height="32px" />
       </div>
