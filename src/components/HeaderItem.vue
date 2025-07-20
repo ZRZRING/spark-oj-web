@@ -6,7 +6,10 @@ import { ElNotification } from 'element-plus';
 
 const userStore = useUserStore();
 const activeName = computed(() => {
-  return route.path.split('/')[1];
+  if (route.path === '/') {
+    return 'home'
+  }
+  return route.path.substring(1);
 })
 const router = useRouter();
 const route = useRoute();
@@ -40,12 +43,13 @@ const handleLogout = () => {
 
 const handleSelect = (key: string) => {
   router.push(`/${key}`);
+  (document.activeElement as HTMLElement)?.blur();
 }
 </script>
 
 <template>
   <div class="header">
-    <el-menu mode="horizontal" class="nav-menu" :default-active="activeName" @select="handleSelect" router>
+    <el-menu mode="horizontal" class="nav-menu" :default-active="activeName" @select="handleSelect">
       <div class="logo">
         <img src="/spoj.ico" alt="logo" width="32px" height="32px" />
       </div>
