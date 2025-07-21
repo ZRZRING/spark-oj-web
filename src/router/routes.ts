@@ -20,6 +20,11 @@ export const constantRoute = [
     component: () => import('@/views/ProblemsetView.vue'),
   },
   {
+    path: '/problem/:pid',
+    name: 'problem',
+    component: () => import('@/views/ProblemDetail.vue'),
+  },
+  {
     path: '/contest',
     name: 'contest',
     component: () => import('@/views/ContestView.vue'),
