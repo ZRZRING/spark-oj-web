@@ -1,54 +1,72 @@
+import component from 'element-plus/es/components/tree-select/src/tree-select-option.mjs';
+
 export const constantRoute = [
   {
     path: '/',
     name: 'root',
     redirect: '/home',
-  },
-  {
-    path: '/home',
-    name: 'home',
-    component: () => import('@/views/HomeView.vue'),
-  },
-  {
-    path: '/judge',
-    name: 'judge',
-    component: () => import('@/views/JudgeView.vue'),
-  },
-  {
-    path: '/problemset',
-    name: 'problemset',
-    component: () => import('@/views/ProblemsetView.vue'),
-  },
-  {
-    path: '/problem/:pid',
-    name: 'problem',
-    component: () => import('@/views/ProblemDetail.vue'),
-  },
-  {
-    path: '/contest',
-    name: 'contest',
-    component: () => import('@/views/ContestView.vue'),
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    redirect: '/',
+    component: () => import('@/views/Home.vue'),
     children: [
       {
-        path: ':username',
-        component: () => import('@/views/ProfileView.vue'),
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/HomeView.vue'),
+      },
+      {
+        path: '/judge',
+        name: 'judge',
+        component: () => import('@/views/JudgeView.vue'),
+      },
+      {
+        path: '/problemset',
+        name: 'problemset',
+        component: () => import('@/views/ProblemsetView.vue'),
+      },
+      {
+        path: '/problem/:pid',
+        name: 'problem',
+        component: () => import('@/views/ProblemDetail.vue'),
+      },
+      {
+        path: '/contest',
+        name: 'contest',
+        component: () => import('@/views/ContestView.vue'),
+      },
+      {
+        path: '/profile',
+        name: 'profile',
+        redirect: '/',
+        children: [
+          {
+            path: ':username',
+            component: () => import('@/views/ProfileView.vue'),
+          },
+        ],
+      },
+      {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/LoginView.vue'),
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: () => import('@/views/RegisterView.vue'),
       },
     ],
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/LoginView.vue'),
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import('@/views/RegisterView.vue'),
+    path: '/admin',
+    name: 'admin',
+    redirect: '/admin/problemset',
+    component: () => import('@/views/admin/AdminHomeView.vue'),
+    children: [
+      {
+        path: '/admin/problemset',
+        name: 'Problemset',
+        component: () => import('@/views/admin/AdminProblemset.vue'),
+      },
+    ],
   },
   {
     path: '/404',
