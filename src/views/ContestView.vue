@@ -67,7 +67,9 @@ onMounted(() => {
             <img src="@/assets/contest.png" class="contest-img" />
           </div>
           <div class="contest-detail">
-            <div class="contest-title">测试比赛1</div>
+            <div class="contest-title">
+              <el-link :href="`/contest/1`" style="font-size: large;" :underline="false">测试比赛1</el-link>
+            </div>
             <div class="contest-meta">
               <span class="contest-time">2025-01-01 00:00:00</span>
               <span class="contest-status">7天</span>

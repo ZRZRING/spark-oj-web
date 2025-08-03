@@ -1,5 +1,31 @@
 <script setup lang="ts">
+import FooterItem from '@/components/FooterItem.vue'
 import { User } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { ElMessageBox, ElNotification } from 'element-plus';
+const userStore = useUserStore();
+const router = useRouter();
+const onCommand = async (toPath: string | number | object) => {
+
+  if (!userStore.token) {
+    ElNotification({
+      type: 'error',
+      message: '您还没有登录'
+    });
+    return;
+  }
+  if (toPath === 'logout') {
+    await ElMessageBox.confirm('确认退出系统吗？', '温馨提示', {
+      type: 'warning',
+      confirmButtonText: '确认',
+      cancelButtonText: '取消'
+    })
+    userStore.userLogout();
+  } else {
+    router.push(`/${toPath}`)
+  }
+}
 </script>
 
 <template>
@@ -9,6 +35,7 @@ import { User } from '@element-plus/icons-vue'
       </div>
       <el-menu active-text-color="#CCFF66" background-color="#646464" :default-active="$route.path" text-color="#fff"
         router>
+        <!-- 题目管理 -->
         <el-sub-menu index="/admin/problem">
           <template #title>
             <el-icon>
@@ -29,11 +56,26 @@ import { User } from '@element-plus/icons-vue'
             <span class="menu-item">新建题目</span>
           </el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="/admin/user">
+        <!-- 标签管理 -->
+        <el-sub-menu index="/admin/tag">
+          <template #title>
+            <el-icon>
+              <User />
+            </el-icon>
+            <span class="menu-item">标签管理</span>
+          </template>
+          <el-menu-item index="/admin/tag/list">
+            <el-icon>
+              <User />
+            </el-icon>
+            <span class="menu-item">标签管理</span>
+          </el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="/admin/tag">
           <el-icon>
             <User />
           </el-icon>
-          <span class="menu-item">题目管理</span>
+          <span class="menu-item">标签管理</span>
         </el-menu-item>
         <el-menu-item index="/admin/user">
           <el-icon>
@@ -50,12 +92,10 @@ import { User } from '@element-plus/icons-vue'
         </div>
         <el-dropdown placement="bottom-end" @command="onCommand">
           <span class="el-dropdown_box">
-            <!-- <el-avatar v-if="userInfo.imgUrl" :src="baseURL + userInfo.imgUrl" />
-            <el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" /> -->
             <h3>admin</h3>
-            <el-icon>
+            <!-- <el-icon>
               <CaretBottom />
-            </el-icon>
+            </el-icon> -->
           </span>
           <template #dropdown>
             <el-dropdown-menu>

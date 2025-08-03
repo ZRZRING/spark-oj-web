@@ -33,6 +33,11 @@ export const constantRoute = [
         component: () => import('@/views/ContestView.vue'),
       },
       {
+        path: '/contest/:cid',
+        name: 'contestDetail',
+        component: () => import('@/views/ContestDetail.vue'),
+      },
+      {
         path: '/profile',
         name: 'profile',
         redirect: '/',
@@ -65,6 +70,16 @@ export const constantRoute = [
         path: '/admin/problemset',
         name: 'Problemset',
         component: () => import('@/views/admin/AdminProblemset.vue'),
+      },
+      {
+        path: '/admin/problem/create',
+        name: 'CreateProblem',
+        component: () => import('@/views/admin/AdminCreateProblem.vue'),
+      },
+      {
+        path: '/admin/tag/list',
+        name: 'TagList',
+        component: () => import('@/views/admin/AdminTagSet.vue'),
       },
     ],
   },
