@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import MainCard from '@/components/MainCard.vue'
+// import MainCard from '@/components/MainCard.vue'
 const tagList = ref([])
 const createTag = () => {
   console.log('create tag')

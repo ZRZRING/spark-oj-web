@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import type { problemSetReq } from '@/stores/types/problem'
-import { getProblemSet } from '@/stores/problem'
-import type { pageInfo } from '@/stores/types/page'
+import type { problemSetReq } from '@/stores/problem_type'
+import { getProblemSet } from '@/stores/problem_store'
+import type { pageInfo } from '@/stores/page_type'
 import MainCard from '@/components/MainCard.vue'
 
 const pageInfo = ref<pageInfo>({

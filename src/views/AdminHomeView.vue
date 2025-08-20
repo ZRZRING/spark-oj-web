@@ -2,7 +2,7 @@
 import FooterItem from '@/components/FooterItem.vue'
 import { User } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user_store'
 import { ElMessageBox, ElNotification } from 'element-plus';
 const userStore = useUserStore();
 const router = useRouter();

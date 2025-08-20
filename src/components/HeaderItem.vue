@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter,useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user_store'
 import { ElMessageBox, ElNotification } from 'element-plus';
 import { SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 

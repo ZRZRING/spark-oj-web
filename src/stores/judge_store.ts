@@ -1,6 +1,6 @@
 import request from "@/utils/request";
-import type { judgeSetRes } from "./types/judge"
-import type { pageInfo } from "./types/page";
+import type { judgeSetRes } from "./judge_type"
+import type { pageInfo } from "./type";
 
 export const getJudgeSet = async (data: pageInfo) => {
   const res = await request.get<pageInfo, judgeSetRes>("/judges", {params: data});

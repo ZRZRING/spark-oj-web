@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import MainCard from '@/components/MainCard.vue'
 import { onMounted, ref } from 'vue';
-import type { pageInfo } from '@/stores/types/page'
-import type { judgeSetReq } from '@/stores/types/judge';
-import { getJudgeSet } from '@/stores/judge'
+import type { pageInfo } from '@/stores/page_type'
+import type { judgeSetReq } from '@/stores/judge_type';
+import { getJudgeSet } from '@/stores/judge_store'
 
 const pageInfo = ref<pageInfo>({
   page: 1,

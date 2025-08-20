@@ -1,0 +1,6 @@
+export const ENUM = {
+  MIN_USERNAME: 3,
+  MAX_USERNAME: 16,
+  MIN_PASSWORD: 3,
+  MAX_PASSWORD: 16,
+};

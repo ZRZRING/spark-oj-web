@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import MainCard from '@/components/MainCard.vue'
 import { ref, onMounted } from 'vue'
-import type { adminProblemSetReq } from '@/stores/types/adminProblem'
-import { getAdminProblemSet } from '@/stores/adminProblem'
-import type { pageInfo } from '@/stores/types/page'
+import type { adminProblemSetReq } from '@/stores/admin_problem_type'
+import { getAdminProblemSet } from '@/stores/admin_problem_store'
+import type { pageInfo } from '@/stores/page_type'
 
 const pageInfo = ref<pageInfo>({
   page: 1,

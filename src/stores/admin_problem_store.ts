@@ -1,6 +1,6 @@
 import request from "@/utils/request";
-import type { adminProblemSetRes } from "./types/adminProblem";
-import type { pageInfo } from "./types/page";
+import type { adminProblemSetRes } from "./admin_problem_type";
+import type { pageInfo } from "./page_type";
 
 export const getAdminProblemSet = async (data: pageInfo) => {
   const res = await request.get<pageInfo, adminProblemSetRes>("/problems", {params: data});

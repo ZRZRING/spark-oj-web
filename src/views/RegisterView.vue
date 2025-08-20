@@ -2,11 +2,11 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElNotification } from 'element-plus'
 import { User, Lock, CircleCheck } from '@element-plus/icons-vue'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user_store'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { registerReq } from '@/stores/types/register'
 import { useRouter } from 'vue-router'
-import { userConst } from '@/stores/const'
+import { userConst } from '@/config/const'
 
 const router = useRouter();
 const userStore = useUserStore();

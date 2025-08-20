@@ -2,9 +2,9 @@
 import { onMounted, ref } from 'vue'
 import { Lock } from '@element-plus/icons-vue'
 import MainCard from '@/components/MainCard.vue'
-import type { contestSetReq } from '@/stores/types/contest'
-import type { pageInfo } from '@/stores/types/page'
-import { getContestSet } from '@/stores/contest'
+import type { contestSetReq } from '@/stores/contest_type'
+import type { pageInfo } from '@/stores/page_type'
+import { getContestSet } from '@/stores/contest_store'
 
 const pageInfo = ref<pageInfo>({
   page: 1,

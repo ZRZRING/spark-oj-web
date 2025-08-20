@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { problemDetailReq } from '@/stores/types/problem';
+import type { problemDetailReq } from '@/stores/problem_type';
 import { ElMessage } from 'element-plus';
 import { ref } from 'vue';
 

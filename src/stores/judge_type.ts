@@ -1,4 +1,4 @@
-import type { response } from ".";
+import type { response } from "./type";
 
 export interface judgeSetReq {
   cid: string;

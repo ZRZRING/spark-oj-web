@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user_store'
 import type { profileReq, userProfile } from "@/stores/types/profile";
 import { onMounted, reactive, ref } from 'vue';
 

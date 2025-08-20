@@ -5,56 +5,49 @@ export const constantRoute = [
     path: '/',
     name: 'root',
     redirect: '/home',
-    component: () => import('@/views/Home.vue'),
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: 'home',
         component: () => import('@/views/HomeView.vue'),
       },
       {
-        path: '/judge',
+        path: 'judge',
         name: 'judge',
         component: () => import('@/views/JudgeView.vue'),
       },
       {
-        path: '/problemset',
+        path: 'problemset',
         name: 'problemset',
         component: () => import('@/views/ProblemsetView.vue'),
       },
       {
-        path: '/problem/:pid',
+        path: 'problem/:pid',
         name: 'problem',
         component: () => import('@/views/ProblemDetail.vue'),
       },
       {
-        path: '/contest',
+        path: 'contest',
         name: 'contest',
         component: () => import('@/views/ContestView.vue'),
       },
       {
-        path: '/contest/:cid',
+        path: 'contest/:cid',
         name: 'contestDetail',
         component: () => import('@/views/ContestDetail.vue'),
       },
       {
-        path: '/profile',
+        path: 'profile/:username',
         name: 'profile',
-        redirect: '/',
-        children: [
-          {
-            path: ':username',
-            component: () => import('@/views/ProfileView.vue'),
-          },
-        ],
+        component: () => import('@/views/ProfileView.vue'),
       },
       {
-        path: '/login',
+        path: 'login',
         name: 'login',
         component: () => import('@/views/LoginView.vue'),
       },
       {
-        path: '/register',
+        path: 'register',
         name: 'register',
         component: () => import('@/views/RegisterView.vue'),
       },
@@ -63,23 +56,22 @@ export const constantRoute = [
   {
     path: '/admin',
     name: 'admin',
-    redirect: '/admin/problemset',
-    component: () => import('@/views/admin/AdminHomeView.vue'),
+    component: () => import('@/views/AdminHomeView.vue'),
     children: [
       {
-        path: '/admin/problemset',
+        path: 'problemset',
         name: 'Problemset',
-        component: () => import('@/views/admin/AdminProblemset.vue'),
+        component: () => import('@/views/AdminProblemset.vue'),
       },
       {
-        path: '/admin/problem/create',
+        path: 'problem/create',
         name: 'CreateProblem',
-        component: () => import('@/views/admin/AdminCreateProblem.vue'),
+        component: () => import('@/views/AdminCreateProblem.vue'),
       },
       {
-        path: '/admin/tag/list',
+        path: 'tag/list',
         name: 'TagList',
-        component: () => import('@/views/admin/AdminTagSet.vue'),
+        component: () => import('@/views/AdminTagSet.vue'),
       },
     ],
   },
