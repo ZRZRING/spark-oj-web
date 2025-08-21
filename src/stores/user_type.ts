@@ -1,37 +1,43 @@
-import type { response } from "./type"
+import type {response} from "./type"
 
-export interface loginReq {
-  username: string;
-  password: string;
+export interface profile {
+    nickname: string;
+    email: string;
+    avatar: string;
+    sex: string;
+    school: string;
+    department: string;
+    major: string;
+    description: string;
 }
 
-export interface loginRes extends response {
-  data: null | { token: string };
+export interface loginReq {
+    username: string;
+    password: string;
+}
+
+export interface loginData {
+    token: string;
+}
+
+export interface loginRes extends response<loginData> {
 }
 
 export interface registerReq {
-  username: string;
-  password: string;
-  repassword: string;
+    username: string;
+    password: string;
+    rePassword: string;
 }
 
-export interface registerRes extends response {}
-
-export interface profile {
-  nickname: string;
-  email: string;
-  avatar: string;
-  sex: string;
-  school: string;
-  department: string;
-  major: string;
-  description: string;
+export interface registerRes extends response {
 }
 
 export interface profileReq {
-  username: string;
+    username: string;
 }
 
-export interface profileRes extends response {
-  data: null | profile;
+export interface profileData extends profile {
+}
+
+export interface profileRes extends response<profileData> {
 }

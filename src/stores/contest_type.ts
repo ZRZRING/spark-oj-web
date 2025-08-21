@@ -1,16 +1,19 @@
-import type { response } from ".";
+import type {pageInfoReq, pageInfoRes, response} from "@/stores/type.ts";
 
-export interface contestSetReq {
-  cid: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  rules: string;
+export interface contest {
+    cid: string;
+    title: string;
+    startTime: string;
+    endTime: string;
+    rules: string;
 }
 
-export interface contestSetRes extends response {
-  data: null | {
-    total: number;
-    contests: contestSetReq[];
-  };
+export interface contestsReq extends pageInfoReq {
+}
+
+export interface contestsResData extends pageInfoRes {
+    contests: contest[];
+}
+
+export interface contestsRes extends response<contestsResData> {
 }

@@ -1,47 +1,42 @@
-import request from "@/utils/request";
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import * as T from "./user_type";
+import service from "@/utils/service.ts";
+import {defineStore} from "pinia";
+import {computed, ref} from "vue";
+import type {
+    loginData,
+    loginReq,
+    loginRes,
+    profileReq,
+    profileRes,
+    registerReq,
+    registerRes
+} from "@/stores/user_type.ts";
 
 export const useUserStore = defineStore("user", () => {
-  let token = ref(localStorage.getItem("token"));
+    const token = ref(localStorage.getItem("token"));
 
-  const userLogout = () => {
-    localStorage.removeItem("token");
-    token.value = null;
-  };
+    const isLoggedIn = computed(() => !!token.value);
 
-  const userLogin = async (req: T.loginReq) => {
-    const res = await request.post<T.loginReq, T.loginRes>(
-      "/login",
-      req
-    );
-    if (res.code != 0 || res.data === null) {
-      return Promise.reject(new Error(res.message));
-    }
-    token.value = res.data.token;
-    localStorage.setItem("token", token.value);
-  };
+    const logout = () => {
+        localStorage.removeItem("token");
+        token.value = null;
+    };
 
-  const userRegister = async (req: T.registerReq) => {
-    const res = await request.post<T.registerReq, T.registerRes>(
-      "/register",
-      req
-    );
-    if (res.code != 0) {
-      return Promise.reject(new Error(res.message));
-    }
-  };
+    const login = async (req: loginReq): Promise<loginData> => {
+        const res = await service.post<loginReq, loginRes>("/login", req);
+        localStorage.setItem("token", res.data!.token);
+        token.value = res.data!.token;
+        return res.data!;
+    };
 
-  const userProfile = async (username: string): Promise<T.profile> => {
-    const res = await request.get<T.profileReq, T.profileRes>(
-      `/profile/${username}`
-    );
-    if (res.code != 0 || res.data == null) {
-      return Promise.reject(new Error(res.message));
-    }
-    return res.data;
-  };
+    const register = async (req: registerReq) => {
+        const res = await service.post<registerReq, registerRes>("/register", req);
+        return res.data!;
+    };
 
-  return { token, userLogin, userLogout, userRegister, userProfile };
+    const getProfile = async (username: string) => {
+        const res = await service.get<profileReq, profileRes>(`/profile/${username}`);
+        return res.data!;
+    };
+
+    return {login, logout, isLoggedIn, register, getProfile};
 });

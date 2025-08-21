@@ -1,11 +1,18 @@
-import request from "@/utils/request";
-import type { problemSetRes } from "./problem_type";
-import type { pageInfo } from "./type";
+import service from "@/utils/service.ts";
+import type {problemsData, problemsReq, problemsRes} from "./problem_type";
+import {defineStore} from "pinia";
 
-export const getProblemSet = async (data: pageInfo) => {
-  const res = await request.get<pageInfo, problemSetRes>("/problems", {params: data});
-  if (res.code != 0 || res.data == null) {
-    return Promise.reject(new Error(res.message));
-  }
-  return res.data;
-}
+export const useProblemStore = defineStore("problem", () => {
+    const getProblems = async (req: problemsReq): Promise<problemsData> => {
+        const res = await service.get<problemsReq, problemsRes>("/problems", {params: req});
+        return res.data!;
+    }
+
+    const getProblemsAdmin = async (req: problemsReq) => {
+        const res = await service.get<problemsReq, problemsRes>("/problems", {params: req});
+        return res.data!;
+    }
+
+    return {getProblems, getProblemsAdmin}
+})
+

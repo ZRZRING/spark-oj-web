@@ -1,33 +1,14 @@
-# spoj-frontend1
+### 运行指南
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-pnpm install
+```bash
+pnpm i
+pnpm run dev
 ```
 
-### Compile and Hot-Reload for Development
+### 开发规范
 
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
+1. 子路由使用继承父路由写法，不以 `/` 开头。
+2. 列表元素命名，定义为其元素的复数，如比赛列表的视图定义为 `ContestsView.vue`。
+3. 一级页面放置在 views 根目录，二级及以上页面以 View 结尾放置在同一级页面的文件夹内。
+4. typescript 建议每个独立元素前后具有一个空行分隔。
+5. 禁止直接引用基本类型，必须用特定名称继承后使用。
