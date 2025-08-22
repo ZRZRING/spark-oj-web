@@ -32,12 +32,12 @@ export interface registerReq {
 export interface registerRes extends response {
 }
 
-export interface profileReq {
+export interface getProfileReq {
     username: string;
 }
 
-export interface profileData extends profile {
+export interface getProfileData extends profile {
 }
 
-export interface profileRes extends response<profileData> {
+export interface getProfileRes extends response<getProfileData> {
 }

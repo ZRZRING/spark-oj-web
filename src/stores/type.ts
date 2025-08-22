@@ -1,7 +1,7 @@
-export interface response<T = any> {
+export interface response<dataType = any> {
     code: number;
     message: string;
-    data: T | null;
+    data: dataType;
 }
 
 export interface pageInfoReq {

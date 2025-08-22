@@ -8,12 +8,12 @@ export interface contest {
     rules: string;
 }
 
-export interface contestsReq extends pageInfoReq {
+export interface getContestsReq extends pageInfoReq {
 }
 
-export interface contestsResData extends pageInfoRes {
+export interface getContestsData extends pageInfoRes {
     contests: contest[];
 }
 
-export interface contestsRes extends response<contestsResData> {
+export interface getContestsRes extends response<getContestsData> {
 }

@@ -9,6 +9,7 @@ import type {loginReq} from '@/stores/user_type'
 import {useRouter} from 'vue-router'
 import {ENUM} from '@/config/enum.ts'
 import {TEXT} from '@/config/zh-cn.ts'
+import {Notify} from "@/utils/notify.ts";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -46,10 +47,11 @@ const login = async () => {
         loading.value = true;
         await userStore.login(loginForm);
         await router.push('/');
-        ElNotification({type: 'success', message: TEXT.loginSuccess, position: 'bottom-right',});
+        Notify.success(TEXT.loginSuccess);
     } catch (error) {
-        if (!(error instanceof Error)) return;
-        ElNotification({type: 'error', message: error.message, position: 'bottom-right',});
+        if (error instanceof Error) {
+            Notify.error(error.message);
+        }
     } finally {
         loading.value = false;
     }
@@ -60,8 +62,8 @@ onMounted(() => {
      * 这里应该还是会出现现在已存在的问题
      * 比如把一个人账号封禁了以后，他没法退出登录，也没法重新登录别的账号
      */
-    if (localStorage.getItem('token') !== null) {
-        ElNotification({type: 'error', message: TEXT.needLogin});
+    if (userStore.isLoggedIn) {
+        ElNotification({type: 'error', message: TEXT.isLoggedIn});
         router.push('/');
     }
 })
@@ -77,11 +79,11 @@ onMounted(() => {
 
             <el-form class="login-form" ref="loginFormRef" :model="loginForm" :rules="rules" status-icon>
                 <el-form-item class="username" prop="username">
-                    <el-input v-model="loginForm.username" type="text" placeholder="用户名" :prefix-icon="User"/>
+                    <el-input v-model="loginForm.username" type="text" :placeholder="TEXT.username" :prefix-icon="User"/>
                 </el-form-item>
 
                 <el-form-item class="password" prop="password">
-                    <el-input v-model="loginForm.password" type="password" placeholder="密码" :prefix-icon="Lock"
+                    <el-input v-model="loginForm.password" type="password" :placeholder="TEXT.password" :prefix-icon="Lock"
                               show-password/>
                 </el-form-item>
 

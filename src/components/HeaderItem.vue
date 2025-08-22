@@ -82,8 +82,8 @@ const handleSelect = (key: string) => {
                 <span>程序设计评测平台</span>
             </div>
             <el-menu-item index="home">主页</el-menu-item>
-            <el-menu-item index="judge">评测</el-menu-item>
-            <el-menu-item index="problemset">题目</el-menu-item>
+            <el-menu-item index="submission">提交</el-menu-item>
+            <el-menu-item index="problem">题目</el-menu-item>
             <el-menu-item index="contest">比赛</el-menu-item>
         </el-menu>
         <el-button round v-if="userStore.isLoggedIn" @click="handleLogout">退出登录</el-button>

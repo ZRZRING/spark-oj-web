@@ -4,11 +4,11 @@ import {onMounted, ref} from 'vue'
 import {Lock} from '@element-plus/icons-vue'
 import CardItem from '@/components/CardItem.vue'
 import {useContestStore} from '@/stores/contest_store.ts'
-import type {contestsReq} from "@/stores/contest_type.ts";
+import type {getContestsReq} from "@/stores/contest_type.ts";
 
 const contestStore = useContestStore()
 
-const req = ref<contestsReq>({
+const req = ref<getContestsReq>({
     page: 1,
     size: 50,
 })
@@ -25,7 +25,7 @@ const handleCurrentChange = (page: number) => {
     getContests()
 }
 
-const contestSet = ref<contestsReq[]>([])
+const contestSet = ref<getContestsReq[]>([])
 
 const getContests = async () => {
     const res = await useContestStore(req.value)

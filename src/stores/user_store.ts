@@ -5,11 +5,12 @@ import type {
     loginData,
     loginReq,
     loginRes,
-    profileReq,
-    profileRes,
+    getProfileReq,
+    getProfileRes,
     registerReq,
-    registerRes
+    registerRes, getProfileData
 } from "@/stores/user_type.ts";
+import {TEXT} from "@/config/zh-cn.ts";
 
 export const useUserStore = defineStore("user", () => {
     const token = ref(localStorage.getItem("token"));
@@ -23,9 +24,8 @@ export const useUserStore = defineStore("user", () => {
 
     const login = async (req: loginReq): Promise<loginData> => {
         const res = await service.post<loginReq, loginRes>("/login", req);
-        localStorage.setItem("token", res.data!.token);
-        token.value = res.data!.token;
-        return res.data!;
+        token.value = res.data.token;
+        return res.data;
     };
 
     const register = async (req: registerReq) => {
@@ -33,10 +33,10 @@ export const useUserStore = defineStore("user", () => {
         return res.data!;
     };
 
-    const getProfile = async (username: string) => {
-        const res = await service.get<profileReq, profileRes>(`/profile/${username}`);
+    const getProfile = async (username: string): Promise<getProfileData> => {
+        const res = await service.get<getProfileReq, getProfileRes>(`/profile/${username}`);
         return res.data!;
     };
 
-    return {login, logout, isLoggedIn, register, getProfile};
+    return {isLoggedIn, login, logout, register, getProfile};
 });

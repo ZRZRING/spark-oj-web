@@ -1,11 +1,13 @@
 import service from "@/utils/service.ts";
-import type {submissionsRes} from "./submission_type.ts"
-import type {pageInfoReq} from "./type";
+import {defineStore} from "pinia";
+import type {getSubmissionsReq, getSubmissionsRes} from "@/stores/submission_type.ts";
 
-export const getJudgeSet = async (data: pageInfoReq) => {
-    const res = await service.get<pageInfoReq, submissionsRes>("/judges", {params: data});
-    if (res.code != 0 || res.data == null) {
-        return Promise.reject(new Error(res.message));
-    }
-    return res.data;
-}
+export const useSubmissionStore = defineStore("submission", () => {
+    const getSubmissions = async (req: getSubmissionsReq) => {
+        const res = await service.get<getSubmissionsReq, getSubmissionsRes>("/judges", {params: req});
+        return res.data!;
+    };
+
+    return {getSubmissions}
+});
+

@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted} from 'vue'
-import {ElNotification} from 'element-plus'
 import {User, Lock, CircleCheck} from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user_store.ts'
 import type {FormInstance, FormRules} from 'element-plus'
 import type {registerReq} from '@/stores/user_type'
 import {useRouter} from 'vue-router'
 import {ENUM} from '@/config/enum'
+import {Notify} from "@/utils/notify.ts";
+import {TEXT} from "@/config/zh-cn.ts";
 
 const router = useRouter();
 const userStore = useUserStore();
 
 onMounted(() => {
-    if (userStore.token) {
-        ElNotification({type: 'error', message: '您不需要注册'});
+    if (userStore.isLoggedIn) {
+        Notify.error(TEXT.isLoggedIn);
         router.push('/');
     }
 })
@@ -37,14 +38,14 @@ const rules = reactive<FormRules<registerReq>>({
     password: [
         {trigger: 'change', required: true, message: '请输入密码'},
         {
-            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MIN_PASSWORD,
+            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
             message: `长度在 ${ENUM.MIN_PASSWORD} 到 ${ENUM.MAX_PASSWORD} 个字符`,
         },
     ],
     rePassword: [
         {trigger: 'change', required: true, message: '请再次输入密码'},
         {
-            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MIN_PASSWORD,
+            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
             message: `长度在 ${ENUM.MIN_PASSWORD} 到 ${ENUM.MAX_PASSWORD} 个字符`,
         },
         {trigger: 'blur', validator: checkRePassword, message: '两次密码不一致'}
@@ -67,17 +68,12 @@ const register = async () => {
         await registerFormRef.value.validate();
         loading.value = true;
         await userStore.register(registerForm);
-        router.push('/');
-        ElNotification({
-            type: 'success',
-            message: '注册成功'
-        });
+        await router.push('/');
+        Notify.success(TEXT.registerSuccess)
     } catch (error) {
-        if (!(error instanceof Error)) return;
-        ElNotification({
-            type: 'error',
-            message: error.message
-        });
+        if (error instanceof Error) {
+            Notify.error(error.message);
+        }
     } finally {
         loading.value = false;
     }
@@ -88,16 +84,16 @@ const register = async () => {
     <div class="container">
         <el-card class="card">
             <div class="title">
-                <h2>用户注册</h2>
+                <h2>{{ TEXT.registerTitle }}</h2>
             </div>
 
             <el-form ref="registerFormRef" style="width: 100%" :model="registerForm" :rules="rules" status-icon>
                 <el-form-item prop="username">
-                    <el-input v-model="registerForm.username" type="text" placeholder="用户名" :prefix-icon="User"/>
+                    <el-input v-model="registerForm.username" type="text" :placeholder="TEXT.username" :prefix-icon="User"/>
                 </el-form-item>
 
                 <el-form-item prop="password">
-                    <el-input v-model="registerForm.password" type="password" placeholder="密码" :prefix-icon="Lock"
+                    <el-input v-model="registerForm.password" type="password" :placeholder="TEXT.password" :prefix-icon="Lock"
                               show-password/>
                 </el-form-item>
 

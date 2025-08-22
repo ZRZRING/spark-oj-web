@@ -1,4 +1,5 @@
 import axios, {type AxiosResponse} from "axios";
+import {TEXT} from "@/config/zh-cn.ts";
 
 const env = import.meta.env;
 
@@ -24,7 +25,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (res) => {
         if (res.data.code === 0) {
-            return res;
+            return res.data;
         } else {
             return Promise.reject(new Error(res.data.message || 'Error'));
         }

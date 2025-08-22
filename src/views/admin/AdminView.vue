@@ -59,32 +59,32 @@ const onCommand = async (toPath: string | number | object) => {
                     </el-menu-item>
                 </el-sub-menu>
                 <!-- 标签管理 -->
-                <el-sub-menu index="/admin/tag">
-                    <template #title>
-                        <el-icon>
-                            <User/>
-                        </el-icon>
-                        <span class="menu-item">标签管理</span>
-                    </template>
-                    <el-menu-item index="/admin/tag/list">
-                        <el-icon>
-                            <User/>
-                        </el-icon>
-                        <span class="menu-item">标签管理</span>
-                    </el-menu-item>
-                </el-sub-menu>
-                <el-menu-item index="/admin/tag">
-                    <el-icon>
-                        <User/>
-                    </el-icon>
-                    <span class="menu-item">标签管理</span>
-                </el-menu-item>
-                <el-menu-item index="/admin/user">
-                    <el-icon>
-                        <User/>
-                    </el-icon>
-                    <span class="menu-item">标签管理</span>
-                </el-menu-item>
+<!--                <el-sub-menu index="/admin/tag">-->
+<!--                    <template #title>-->
+<!--                        <el-icon>-->
+<!--                            <User/>-->
+<!--                        </el-icon>-->
+<!--                        <span class="menu-item">标签管理</span>-->
+<!--                    </template>-->
+<!--                    <el-menu-item index="/admin/tag/list">-->
+<!--                        <el-icon>-->
+<!--                            <User/>-->
+<!--                        </el-icon>-->
+<!--                        <span class="menu-item">标签管理</span>-->
+<!--                    </el-menu-item>-->
+<!--                </el-sub-menu>-->
+<!--                <el-menu-item index="/admin/tag">-->
+<!--                    <el-icon>-->
+<!--                        <User/>-->
+<!--                    </el-icon>-->
+<!--                    <span class="menu-item">标签管理</span>-->
+<!--                </el-menu-item>-->
+<!--                <el-menu-item index="/admin/user">-->
+<!--                    <el-icon>-->
+<!--                        <User/>-->
+<!--                    </el-icon>-->
+<!--                    <span class="menu-item">标签管理</span>-->
+<!--                </el-menu-item>-->
             </el-menu>
         </el-aside>
         <el-container>

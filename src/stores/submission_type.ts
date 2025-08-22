@@ -1,19 +1,16 @@
 import type {pageInfoReq, pageInfoRes, response} from "./type";
 
 export interface submission {
-    cid: string;
+    sid: string;
     title: string;
-    startTime: string;
-    endTime: string;
-    rules: string;
 }
 
-export interface submissionsReq extends pageInfoReq {
+export interface getSubmissionsReq extends pageInfoReq {
 }
 
-export interface submissionsData extends pageInfoRes {
+export interface getSubmissionsData extends pageInfoRes {
     submissions: submission[];
 }
 
-export interface submissionsRes extends response<submissionsData> {
+export interface getSubmissionsRes extends response<getSubmissionsData> {
 }

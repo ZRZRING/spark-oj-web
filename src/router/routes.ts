@@ -13,7 +13,7 @@ export const constantRoute = [
             {
                 path: 'judge',
                 name: 'judge',
-                component: () => import('@/views/home/JudgeView.vue'),
+                component: () => import('@/views/home/SubmissionView.vue'),
             },
             {
                 path: 'problems',
@@ -58,20 +58,20 @@ export const constantRoute = [
         component: () => import('@/views/Admin.vue'),
         children: [
             {
-                path: 'problemset',
-                name: 'Problemset',
+                path: 'problems',
+                name: 'adminProblems',
                 component: () => import('@/views/admin/ProblemsView.vue'),
             },
             {
                 path: 'problem/create',
-                name: 'CreateProblem',
+                name: 'adminCreateProblem',
                 component: () => import('@/views/admin/CreateProblemView.vue'),
             },
-            {
-                path: 'tag/list',
-                name: 'TagList',
-                component: () => import('@/views/admin/TagView.vue'),
-            },
+            // {
+            //     path: 'tags',
+            //     name: 'tags',
+            //     component: () => import('@/views/admin/TagsView.vue'),
+            // },
         ],
     },
     {
