@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const nowTime = ref<string>("")
 
@@ -50,7 +50,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-
 .footer {
     display: flex;
     flex-direction: column;
@@ -59,5 +58,4 @@ onBeforeUnmount(() => {
     gap: 20px;
     padding: 10px 0;
 }
-
 </style>

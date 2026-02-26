@@ -1,29 +1,29 @@
 <script setup lang="ts">
 
-import {ref, reactive, onMounted} from 'vue'
-import {ElNotification} from 'element-plus'
-import {User, Lock} from '@element-plus/icons-vue'
-import {useUserStore} from '@/stores/user_store.ts'
-import type {FormInstance, FormRules} from 'element-plus'
-import type {loginReq} from '@/stores/user_type'
-import {useRouter} from 'vue-router'
-import {ENUM} from '@/config/enum.ts'
-import {TEXT} from '@/config/zh-cn.ts'
-import {Notify} from "@/utils/notify.ts";
+import { ref, reactive, onMounted } from 'vue'
+import { ElNotification } from 'element-plus'
+import { User, Lock } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores/user_store.ts'
+import type { FormInstance, FormRules } from 'element-plus'
+import type { loginReq } from '@/stores/user_type'
+import { useRouter } from 'vue-router'
+import { ENUM } from '@/config/enum.ts'
+import { TEXT } from '@/config/zh-cn.ts'
+import { Notify } from "@/utils/notify.ts";
 
 const router = useRouter();
 const userStore = useUserStore();
 
 const rules = reactive<FormRules<loginReq>>({
     username: [
-        {trigger: 'change', required: true, message: TEXT.usernameRequired},
+        { trigger: 'change', required: true, message: TEXT.usernameRequired },
         {
             trigger: 'blur', min: ENUM.MIN_USERNAME, max: ENUM.MAX_USERNAME,
             message: TEXT.lengthRange(ENUM.MIN_USERNAME, ENUM.MAX_USERNAME),
         },
     ],
     password: [
-        {trigger: 'change', required: true, message: TEXT.passwordRequired},
+        { trigger: 'change', required: true, message: TEXT.passwordRequired },
         {
             trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
             message: TEXT.lengthRange(ENUM.MIN_PASSWORD, ENUM.MAX_PASSWORD),
@@ -63,7 +63,7 @@ onMounted(() => {
      * 比如把一个人账号封禁了以后，他没法退出登录，也没法重新登录别的账号
      */
     if (userStore.isLoggedIn) {
-        ElNotification({type: 'error', message: TEXT.isLoggedIn});
+        ElNotification({ type: 'error', message: TEXT.isLoggedIn });
         router.push('/');
     }
 })
@@ -79,12 +79,13 @@ onMounted(() => {
 
             <el-form class="login-form" ref="loginFormRef" :model="loginForm" :rules="rules" status-icon>
                 <el-form-item class="username" prop="username">
-                    <el-input v-model="loginForm.username" type="text" :placeholder="TEXT.username" :prefix-icon="User"/>
+                    <el-input v-model="loginForm.username" type="text" :placeholder="TEXT.username"
+                        :prefix-icon="User" />
                 </el-form-item>
 
                 <el-form-item class="password" prop="password">
-                    <el-input v-model="loginForm.password" type="password" :placeholder="TEXT.password" :prefix-icon="Lock"
-                              show-password/>
+                    <el-input v-model="loginForm.password" type="password" :placeholder="TEXT.password"
+                        :prefix-icon="Lock" show-password />
                 </el-form-item>
 
                 <el-form-item>
@@ -97,7 +98,6 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-
 .container {
     width: 100%;
     height: 500px;
@@ -119,5 +119,4 @@ onMounted(() => {
     width: 100%;
     margin-top: 15px;
 }
-
 </style>

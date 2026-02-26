@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type {problemDetailReq} from '@/stores/problem_type.ts';
-import {ElMessage} from 'element-plus';
-import {ref} from 'vue';
+import type { problemDetailReq } from '@/stores/problem_type.ts';
+import { ElMessage } from 'element-plus';
+import { ref } from 'vue';
 
 // 题目基本信息
 const problemInfo = ref<problemDetailReq>({
@@ -24,8 +24,8 @@ const solutionCount = ref(185);
 
 // 模拟的相关比赛数据
 const relatedContests = ref([
-    {id: 1, name: '[LZOI] Round - 01 Div. 2'},
-    {id: 2, name: '[LZOI] Round - 01 Div. 1'},
+    { id: 1, name: '[LZOI] Round - 01 Div. 2' },
+    { id: 2, name: '[LZOI] Round - 01 Div. 1' },
 ]);
 
 const activeTab = ref<string>('cpp');
@@ -76,8 +76,8 @@ const submitCode = async () => {
                     <el-tab-pane label="C++" name="cpp"></el-tab-pane>
                     <el-tab-pane label="Java" name="java"></el-tab-pane>
                     <el-tab-pane label="Python" name="python"></el-tab-pane>
-                    <el-input v-model="code" :autosize="{ minRows: 10, maxRows: 100 }"
-                              type="textarea" placeholder="请输入代码"></el-input>
+                    <el-input v-model="code" :autosize="{ minRows: 10, maxRows: 100 }" type="textarea"
+                        placeholder="请输入代码"></el-input>
                 </el-tabs>
             </div>
         </div>
@@ -109,8 +109,8 @@ const submitCode = async () => {
                     <span class="nav-icon">📊</span> 统计
                 </div>
                 <div class="nav-link-item">
-          <span class="nav-icon">📋
-          </span> 复制
+                    <span class="nav-icon">📋
+                    </span> 复制
                 </div>
             </el-card>
 
@@ -176,8 +176,8 @@ const submitCode = async () => {
 }
 
 /* 最后一个卡片取消下边距 */
-.main-content-area > .el-card:last-child,
-.right-sidebar-area > .el-card:last-child {
+.main-content-area>.el-card:last-child,
+.right-sidebar-area>.el-card:last-child {
     margin-bottom: 0;
 }
 

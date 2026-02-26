@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router';
-import {useUserStore} from '@/stores/user_store.ts'
-import type {profileReq, userProfile} from "@/stores/types/profile";
-import {onMounted, reactive, ref} from 'vue';
+import { useUserStore } from '@/stores/user_store.ts'
+import type {getProfileData} from '@/stores/user_type.ts'
+import {onMounted, ref} from 'vue';
 
 const route = useRoute();
 const userStore = useUserStore();
-const username = route.params.username;
+const username = String(route.params.username ?? '');
 
-let profile = ref<userProfile | null>(null)
+const profile = ref<getProfileData | null>(null)
 
 onMounted(async () => {
+    if (!username) {
+        return;
+    }
     try {
-        const res = await userStore.userProfile(<profileReq>{username});
+        const res = await userStore.getProfile(username);
         profile.value = res;
-        console.log(profile);
     } catch (error) {
         console.error('加载用户信息失败:', error)
     }
@@ -47,7 +49,7 @@ onMounted(async () => {
                             </div>
                         </template>
                         <p v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</p>
-                        <img :src=profile?.avatar width="128px" height="128px"/>
+                        <img :src="profile?.avatar" width="128px" height="128px"/>
                     </el-card>
                 </div>
             </el-col>

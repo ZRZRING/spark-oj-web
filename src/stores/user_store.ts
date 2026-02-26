@@ -8,24 +8,44 @@ import type {
     getProfileReq,
     getProfileRes,
     registerReq,
-    registerRes, getProfileData
+    registerRes,
+    getProfileData,
+    getAdminProtectedReq,
+    getAdminProtectedRes,
+    userRole
 } from "@/stores/user_type.ts";
-import {TEXT} from "@/config/zh-cn.ts";
 
 export const useUserStore = defineStore("user", () => {
     const token = ref(localStorage.getItem("token"));
-
+    const adminRole = ref<userRole | null>(null);
     const isLoggedIn = computed(() => !!token.value);
+    const isAdmin = computed(() => adminRole.value === 'admin');
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("username");
         token.value = null;
+        adminRole.value = null;
     };
 
     const login = async (req: loginReq): Promise<loginData> => {
         const res = await service.post<loginReq, loginRes>("/login", req);
         token.value = res.data.token;
+        localStorage.setItem("token", res.data.token);
+        adminRole.value = null;
+        localStorage.setItem("username", req.username);
         return res.data;
+    };
+
+    const checkAdminAccess = async (): Promise<boolean> => {
+        if (!token.value) {
+            adminRole.value = null;
+            return false;
+        }
+        const res = await service.get<getAdminProtectedReq, getAdminProtectedRes>("/admin/protected");
+        adminRole.value = res.data.user_role;
+        localStorage.setItem("username", res.data.username);
+        return res.data.user_role === 'admin';
     };
 
     const register = async (req: registerReq) => {
@@ -38,5 +58,5 @@ export const useUserStore = defineStore("user", () => {
         return res.data!;
     };
 
-    return {isLoggedIn, login, logout, register, getProfile};
+    return {isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess};
 });

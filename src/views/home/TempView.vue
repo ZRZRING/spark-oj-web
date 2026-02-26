@@ -1,33 +1,22 @@
 <template>
-    <el-form
-        ref="ruleFormRef"
-        style="max-width: 600px"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="auto"
-    >
+    <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto">
         <el-form-item label="Activity name" prop="name">
-            <el-input v-model="ruleForm.name"/>
+            <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="Activity zone" prop="region">
             <el-select v-model="ruleForm.region" placeholder="Activity zone">
-                <el-option label="Zone one" value="shanghai"/>
-                <el-option label="Zone two" value="beijing"/>
+                <el-option label="Zone one" value="shanghai" />
+                <el-option label="Zone two" value="beijing" />
             </el-select>
         </el-form-item>
         <el-form-item label="Activity count" prop="count">
-            <el-select-v2 v-model="ruleForm.count" placeholder="Activity count" :options="options"/>
+            <el-select-v2 v-model="ruleForm.count" placeholder="Activity count" :options="options" />
         </el-form-item>
         <el-form-item label="Activity time" required>
             <el-col :span="11">
                 <el-form-item prop="date1">
-                    <el-date-picker
-                        v-model="ruleForm.date1"
-                        type="date"
-                        aria-label="Pick a date"
-                        placeholder="Pick a date"
-                        style="width: 100%"
-                    />
+                    <el-date-picker v-model="ruleForm.date1" type="date" aria-label="Pick a date"
+                        placeholder="Pick a date" style="width: 100%" />
                 </el-form-item>
             </el-col>
             <el-col class="text-center" :span="2">
@@ -35,20 +24,16 @@
             </el-col>
             <el-col :span="11">
                 <el-form-item prop="date2">
-                    <el-time-picker
-                        v-model="ruleForm.date2"
-                        aria-label="Pick a time"
-                        placeholder="Pick a time"
-                        style="width: 100%"
-                    />
+                    <el-time-picker v-model="ruleForm.date2" aria-label="Pick a time" placeholder="Pick a time"
+                        style="width: 100%" />
                 </el-form-item>
             </el-col>
         </el-form-item>
         <el-form-item label="Instant delivery" prop="delivery">
-            <el-switch v-model="ruleForm.delivery"/>
+            <el-switch v-model="ruleForm.delivery" />
         </el-form-item>
         <el-form-item label="Activity location" prop="location">
-            <el-segmented v-model="ruleForm.location" :options="locationOptions"/>
+            <el-segmented v-model="ruleForm.location" :options="locationOptions" />
         </el-form-item>
         <el-form-item label="Activity type" prop="type">
             <el-checkbox-group v-model="ruleForm.type">
@@ -65,7 +50,7 @@
             </el-radio-group>
         </el-form-item>
         <el-form-item label="Activity form" prop="desc">
-            <el-input v-model="ruleForm.desc" type="textarea"/>
+            <el-input v-model="ruleForm.desc" type="textarea" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)"> Create</el-button>
@@ -75,8 +60,8 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref} from 'vue'
-import type {FormInstance, FormRules} from 'element-plus'
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 
 interface RuleForm {
     name: string
@@ -109,8 +94,8 @@ const locationOptions = ['Home', 'Company', 'School']
 
 const rules = reactive<FormRules<RuleForm>>({
     name: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'},
-        {min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'},
+        { required: true, message: 'Please input Activity name', trigger: 'blur' },
+        { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
     ],
     region: [
         {
@@ -164,7 +149,7 @@ const rules = reactive<FormRules<RuleForm>>({
             trigger: 'change',
         },
     ],
-    desc: [{required: true, message: 'Please input activity form', trigger: 'blur'}],
+    desc: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -183,7 +168,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     formEl.resetFields()
 }
 
-const options = Array.from({length: 10000}).map((_, idx) => ({
+const options = Array.from({ length: 10000 }).map((_, idx) => ({
     value: `${idx + 1}`,
     label: `${idx + 1}`,
 }))

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref } from 'vue'
 // import CardItem from '@/components/CardItem.vue'
 const tagList = ref([])
 const createTag = () => {
@@ -25,10 +25,10 @@ const handleDelete = (id: number) => {
 
         <template #content>
             <el-table>
-                <el-table-column prop="id" label="ID" width="180"/>
-                <el-table-column prop="name" label="标签名称" width="180"/>
-                <el-table-column prop="author" label="创建人" width="180"/>
-                <el-table-column prop="date" label="创建日期" width="180"/>
+                <el-table-column prop="id" label="ID" width="180" />
+                <el-table-column prop="name" label="标签名称" width="180" />
+                <el-table-column prop="author" label="创建人" width="180" />
+                <el-table-column prop="date" label="创建日期" width="180" />
                 <el-table-column label="操作">
                     <template #default="{ row }">
                         <el-button type="primary" @click="handleEdit(row.pid)">编辑</el-button>
@@ -41,6 +41,4 @@ const handleDelete = (id: number) => {
     </MainCard>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

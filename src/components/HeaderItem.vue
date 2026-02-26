@@ -1,24 +1,53 @@
 <script setup lang="ts">
 
-import {computed, ref} from 'vue'
-import {useRouter, useRoute} from 'vue-router'
-import {useUserStore} from '@/stores/user_store'
-import {ElMessageBox, ElNotification} from 'element-plus';
-import {SwitchButton, ArrowDown} from '@element-plus/icons-vue'
-import {TEXT} from "@/config/zh-cn.ts";
+import { computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user_store'
+import { ElMessageBox, ElNotification } from 'element-plus';
+import { SwitchButton, ArrowDown } from '@element-plus/icons-vue'
+import { TEXT } from "@/config/zh-cn.ts";
 
 const userStore = useUserStore();
 
 const activeName = computed(() => {
-    if (route.path === '/') {
+    if (route.path === '/' || route.path === '/home') {
         return 'home'
     }
-    return route.path.substring(1);
+    if (route.path.startsWith('/submissions')) {
+        return 'submissions'
+    }
+    if (route.path.startsWith('/problems') || route.path.startsWith('/problem/')) {
+        return 'problems'
+    }
+    if (route.path.startsWith('/contests')) {
+        return 'contests'
+    }
+    return '';
 })
 
 const router = useRouter();
 
 const route = useRoute();
+
+const refreshAdminAccess = async () => {
+    if (!userStore.isLoggedIn) {
+        return;
+    }
+    try {
+        await userStore.checkAdminAccess();
+    } catch {
+    }
+};
+
+watch(
+    () => userStore.isLoggedIn,
+    (isLoggedIn) => {
+        if (isLoggedIn) {
+            refreshAdminAccess();
+        }
+    },
+    { immediate: true }
+);
 
 const handleLogin = () => {
     if (localStorage.getItem('token') !== null) {
@@ -41,7 +70,7 @@ const handleLogout = () => {
         userStore.logout();
         router.push('/');
     } else {
-        ElNotification({type: 'error', message: TEXT.needLogin});
+        ElNotification({ type: 'error', message: TEXT.needLogin });
     }
 };
 
@@ -50,25 +79,38 @@ const handleSelect = (key: string) => {
     (document.activeElement as HTMLElement)?.blur();
 }
 
-// const onCommand = async (toPath: string | number | object) => {
-//     if (!userStore.token) {
-//         ElNotification({
-//             type: 'error',
-//             message: '您还没有登录'
-//         });
-//         return;
-//     }
-//     if (toPath === 'logout') {
-//         await ElMessageBox.confirm('确认退出系统吗？', '温馨提示', {
-//             type: 'warning',
-//             confirmButtonText: '确认',
-//             cancelButtonText: '取消'
-//         })
-//         userStore.userLogout();
-//     } else {
-//         await router.push(`/${toPath}`)
-//     }
-// }
+const onCommand = async (command: string) => {
+    if (!userStore.isLoggedIn) {
+        ElNotification({ type: 'error', message: TEXT.needLogin });
+        return;
+    }
+    if (command === 'logout') {
+        await ElMessageBox.confirm('确认退出系统吗？', '温馨提示', {
+            type: 'warning',
+            confirmButtonText: '确认',
+            cancelButtonText: '取消'
+        })
+        handleLogout();
+        return;
+    }
+    if (command === 'profile') {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            ElNotification({ type: 'error', message: '未找到当前用户名，请重新登录' });
+            return;
+        }
+        await router.push(`/profile/${username}`)
+        return;
+    }
+    if (command === 'admin') {
+        const allowAdmin = await userStore.checkAdminAccess();
+        if (!allowAdmin) {
+            ElNotification({ type: 'error', message: '无后台访问权限' });
+            return;
+        }
+        await router.push('/admin/problems')
+    }
+}
 
 </script>
 
@@ -76,47 +118,48 @@ const handleSelect = (key: string) => {
     <div class="header">
         <el-menu mode="horizontal" class="nav-menu" :default-active="activeName" @select="handleSelect">
             <div class="logo">
-                <img src="/spoj.ico" alt="logo" width="32px" height="32px"/>
+                <img src="/spoj.ico" alt="logo" width="32px" height="32px" />
             </div>
             <div class="title">
                 <span>程序设计评测平台</span>
             </div>
             <el-menu-item index="home">主页</el-menu-item>
-            <el-menu-item index="submission">提交</el-menu-item>
-            <el-menu-item index="problem">题目</el-menu-item>
-            <el-menu-item index="contest">比赛</el-menu-item>
+            <el-menu-item index="submissions">提交</el-menu-item>
+            <el-menu-item index="problems">题目</el-menu-item>
+            <el-menu-item index="contests">比赛</el-menu-item>
         </el-menu>
-        <el-button round v-if="userStore.isLoggedIn" @click="handleLogout">退出登录</el-button>
-        <el-button round v-if="!userStore.isLoggedIn" @click="handleLogin">登录</el-button>
-        <el-button round v-if="!userStore.isLoggedIn" @click="handleRegister">注册</el-button>
-<!--        <el-row>-->
-<!--            <el-dropdown v-if="userStore.token" placement="bottom-end" @command="onCommand">-->
-<!--            <span class="el-dropdown-link">-->
-<!--              Dropdown List<el-icon class="el-icon&#45;&#45;right"><arrow-down/></el-icon>-->
-<!--            </span>-->
-<!--                <template #dropdown>-->
-<!--                    <el-dropdown-menu>-->
-<!--                        <el-dropdown-item command="profile">个人资料</el-dropdown-item>-->
-<!--                        <el-dropdown-item command="password">修改密码</el-dropdown-item>-->
-<!--                        <el-dropdown-item command="admin">后台管理</el-dropdown-item>-->
-<!--                        <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>-->
-<!--                    </el-dropdown-menu>-->
-<!--                </template>-->
-<!--            </el-dropdown>-->
-<!--            <el-button round v-else @click="handleLogin">登录</el-button>-->
-<!--            <el-button round v-if="!userStore.token" @click="handleRegister">注册</el-button>-->
-<!--        </el-row>-->
+        <div class="actions">
+            <el-dropdown v-if="userStore.isLoggedIn" placement="bottom-end" trigger="click" @command="onCommand">
+                <span class="el-dropdown-link">
+                    个人中心
+                    <el-icon class="el-icon--right">
+                        <ArrowDown />
+                    </el-icon>
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item command="profile">个人资料</el-dropdown-item>
+                        <el-dropdown-item v-if="userStore.isAdmin" command="admin">后台管理</el-dropdown-item>
+                        <el-dropdown-item divided command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+            <template v-else>
+                <el-button round @click="handleLogin">登录</el-button>
+                <el-button round @click="handleRegister">注册</el-button>
+            </template>
+        </div>
     </div>
 </template>
 
 <style scoped>
-
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
+    background: var(--el-bg-color);
     box-shadow: var(--el-box-shadow-light);
+    padding-right: 20px;
 }
 
 .logo,
@@ -131,11 +174,26 @@ const handleSelect = (key: string) => {
     border-bottom: none;
 }
 
-.example-showcase .el-dropdown-link {
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.el-dropdown-link {
     cursor: pointer;
     color: var(--el-color-primary);
     display: flex;
     align-items: center;
+    border: 1px solid var(--el-border-color);
+    border-radius: var(--el-border-radius-round);
+    padding: 8px 14px;
+    transition: all .2s ease;
 }
 
+.el-dropdown-link:hover {
+    color: var(--el-color-primary-dark-2);
+    border-color: var(--el-color-primary-light-5);
+    background: var(--el-color-primary-light-9);
+}
 </style>

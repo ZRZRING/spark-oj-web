@@ -14,3 +14,17 @@ export interface getProblemsData extends pageInfoRes {
 
 export interface getProblemsRes extends response<getProblemsData> {
 }
+
+export interface problemDetailReq {
+    pid: string;
+    title: string;
+    timeLimit: number;
+    memoryLimit: number;
+    total: number;
+    accepted: number;
+    difficulty: string;
+    uploader: string;
+    text: string;
+    type: string;
+    tag: string[];
+}

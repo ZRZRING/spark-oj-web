@@ -41,3 +41,16 @@ export interface getProfileData extends profile {
 
 export interface getProfileRes extends response<getProfileData> {
 }
+
+export type userRole = 'admin' | 'user';
+
+export interface getAdminProtectedReq {
+}
+
+export interface getAdminProtectedData {
+    username: string;
+    user_role: userRole;
+}
+
+export interface getAdminProtectedRes extends response<getAdminProtectedData> {
+}

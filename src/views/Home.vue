@@ -8,19 +8,18 @@ import FooterItem from '@/components/FooterItem.vue'
 <template>
     <el-container class="container">
         <el-header class="header">
-            <HeaderItem/>
+            <HeaderItem />
         </el-header>
         <el-main class="main">
-            <router-view/>
+            <router-view />
         </el-main>
         <el-footer class="footer">
-            <FooterItem/>
+            <FooterItem />
         </el-footer>
     </el-container>
 </template>
 
 <style scoped>
-
 .container {
     width: 100%;
 }
@@ -30,5 +29,4 @@ import FooterItem from '@/components/FooterItem.vue'
 .footer {
     padding: 0;
 }
-
 </style>

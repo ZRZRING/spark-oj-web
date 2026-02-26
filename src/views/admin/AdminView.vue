@@ -1,30 +1,48 @@
 <script setup lang="ts">
 import FooterItem from '@/components/FooterItem.vue'
-import {User} from '@element-plus/icons-vue'
-import {useRouter} from 'vue-router'
-import {useUserStore} from '@/stores/user_store.ts'
-import {ElMessageBox, ElNotification} from 'element-plus';
+import { User } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user_store.ts'
+import { ElMessageBox, ElNotification } from 'element-plus';
+import { TEXT } from '@/config/zh-cn.ts'
 
 const userStore = useUserStore();
 const router = useRouter();
 const onCommand = async (toPath: string | number | object) => {
 
-    if (!userStore.token) {
+    if (!userStore.isLoggedIn) {
         ElNotification({
             type: 'error',
-            message: '您还没有登录'
+            message: TEXT.needLogin,
         });
         return;
     }
+
+    const command = String(toPath);
+
     if (toPath === 'logout') {
         await ElMessageBox.confirm('确认退出系统吗？', '温馨提示', {
             type: 'warning',
             confirmButtonText: '确认',
             cancelButtonText: '取消'
         })
-        userStore.userLogout();
+        userStore.logout();
+        await router.push('/login');
+    } else if (command === 'profile') {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            ElNotification({ type: 'error', message: '未找到当前用户名，请重新登录' });
+            return;
+        }
+        await router.push(`/profile/${username}`);
+    } else if (command === 'submission') {
+        await router.push('/submissions');
+    } else if (command === 'home') {
+        await router.push('/home');
+    } else if (command === 'password' || command === 'signup') {
+        ElNotification({ type: 'warning', message: '该功能暂未开放' });
     } else {
-        router.push(`/${toPath}`)
+        await router.push(`/${command}`)
     }
 }
 </script>
@@ -35,56 +53,55 @@ const onCommand = async (toPath: string | number | object) => {
             <div class="el-aside_logo">
             </div>
             <el-menu active-text-color="#CCFF66" background-color="#646464" :default-active="$route.path"
-                     text-color="#fff"
-                     router>
+                text-color="#fff" router>
                 <!-- 题目管理 -->
                 <el-sub-menu index="/admin/problem">
                     <template #title>
                         <el-icon>
-                            <User/>
+                            <User />
                         </el-icon>
                         <span class="menu-item">题目管理</span>
                     </template>
-                    <el-menu-item index="/admin/problemset">
+                    <el-menu-item index="/admin/problems">
                         <el-icon>
-                            <User/>
+                            <User />
                         </el-icon>
                         <span class="menu-item">题库</span>
                     </el-menu-item>
                     <el-menu-item index="/admin/problem/create">
                         <el-icon>
-                            <User/>
+                            <User />
                         </el-icon>
                         <span class="menu-item">新建题目</span>
                     </el-menu-item>
                 </el-sub-menu>
                 <!-- 标签管理 -->
-<!--                <el-sub-menu index="/admin/tag">-->
-<!--                    <template #title>-->
-<!--                        <el-icon>-->
-<!--                            <User/>-->
-<!--                        </el-icon>-->
-<!--                        <span class="menu-item">标签管理</span>-->
-<!--                    </template>-->
-<!--                    <el-menu-item index="/admin/tag/list">-->
-<!--                        <el-icon>-->
-<!--                            <User/>-->
-<!--                        </el-icon>-->
-<!--                        <span class="menu-item">标签管理</span>-->
-<!--                    </el-menu-item>-->
-<!--                </el-sub-menu>-->
-<!--                <el-menu-item index="/admin/tag">-->
-<!--                    <el-icon>-->
-<!--                        <User/>-->
-<!--                    </el-icon>-->
-<!--                    <span class="menu-item">标签管理</span>-->
-<!--                </el-menu-item>-->
-<!--                <el-menu-item index="/admin/user">-->
-<!--                    <el-icon>-->
-<!--                        <User/>-->
-<!--                    </el-icon>-->
-<!--                    <span class="menu-item">标签管理</span>-->
-<!--                </el-menu-item>-->
+                <!--                <el-sub-menu index="/admin/tag">-->
+                <!--                    <template #title>-->
+                <!--                        <el-icon>-->
+                <!--                            <User/>-->
+                <!--                        </el-icon>-->
+                <!--                        <span class="menu-item">标签管理</span>-->
+                <!--                    </template>-->
+                <!--                    <el-menu-item index="/admin/tag/list">-->
+                <!--                        <el-icon>-->
+                <!--                            <User/>-->
+                <!--                        </el-icon>-->
+                <!--                        <span class="menu-item">标签管理</span>-->
+                <!--                    </el-menu-item>-->
+                <!--                </el-sub-menu>-->
+                <!--                <el-menu-item index="/admin/tag">-->
+                <!--                    <el-icon>-->
+                <!--                        <User/>-->
+                <!--                    </el-icon>-->
+                <!--                    <span class="menu-item">标签管理</span>-->
+                <!--                </el-menu-item>-->
+                <!--                <el-menu-item index="/admin/user">-->
+                <!--                    <el-icon>-->
+                <!--                        <User/>-->
+                <!--                    </el-icon>-->
+                <!--                    <span class="menu-item">标签管理</span>-->
+                <!--                </el-menu-item>-->
             </el-menu>
         </el-aside>
         <el-container>
@@ -93,12 +110,12 @@ const onCommand = async (toPath: string | number | object) => {
                     <h1>程序设计评测平台后台</h1>
                 </div>
                 <el-dropdown placement="bottom-end" @command="onCommand">
-          <span class="el-dropdown_box">
-            <h3>admin</h3>
-              <!-- <el-icon>
+                    <span class="el-dropdown_box">
+                        <h3>admin</h3>
+                        <!-- <el-icon>
                 <CaretBottom />
               </el-icon> -->
-          </span>
+                    </span>
                     <template #dropdown>
                         <el-dropdown-menu>
 
@@ -117,7 +134,7 @@ const onCommand = async (toPath: string | number | object) => {
                 <router-view></router-view>
             </el-main>
             <el-footer>
-                <FooterItem/>
+                <FooterItem />
             </el-footer>
         </el-container>
     </el-container>

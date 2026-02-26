@@ -3,7 +3,7 @@ import CardItem from '@/components/CardItem.vue'
 </script>
 
 <template>
-    <CardItem class="announcement_card">
+    <CardItem class="announcement-card">
         <template #title>
             <span>公告</span>
         </template>
@@ -11,7 +11,7 @@ import CardItem from '@/components/CardItem.vue'
             <el-link>更多</el-link>
         </template>
         <template #content>
-            <div class="announcement_list">
+            <div class="announcement-list">
                 <el-row>
                     <span>公告标题</span>
                 </el-row>
@@ -19,16 +19,7 @@ import CardItem from '@/components/CardItem.vue'
                     <span>发稿人</span>
                 </el-row>
             </div>
-            <div class="announcement_list">
-                <el-row>
-                    <span>公告标题</span>
-                </el-row>
-                <el-row>
-                    <span>发稿人</span>
-                </el-row>
-            </div>
-
-            <div class="announcement_list">
+            <div class="announcement-list">
                 <el-row>
                     <span>公告标题</span>
                 </el-row>
@@ -37,7 +28,16 @@ import CardItem from '@/components/CardItem.vue'
                 </el-row>
             </div>
 
-            <div class="announcement_list">
+            <div class="announcement-list">
+                <el-row>
+                    <span>公告标题</span>
+                </el-row>
+                <el-row>
+                    <span>发稿人</span>
+                </el-row>
+            </div>
+
+            <div class="announcement-list">
                 <el-row>
                     <span>公告标题</span>
                 </el-row>
@@ -50,12 +50,11 @@ import CardItem from '@/components/CardItem.vue'
 </template>
 
 <style scoped>
-.announcement_card {
-    margin-left: 150px;
-    margin-right: 150px;
+.announcement-card {
+    margin: 20px 150px;
 }
 
-.announcement_list {
+.announcement-list {
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid #eaeaea;

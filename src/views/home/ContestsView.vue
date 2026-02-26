@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {onMounted, ref} from 'vue'
-import {Lock} from '@element-plus/icons-vue'
+import { onMounted, ref } from 'vue'
+import { Lock } from '@element-plus/icons-vue'
 import CardItem from '@/components/CardItem.vue'
-import {useContestStore} from '@/stores/contest_store.ts'
-import type {getContestsReq} from "@/stores/contest_type.ts";
+import { useContestStore } from '@/stores/contest_store.ts'
+import type { contest, getContestsReq } from "@/stores/contest_type.ts";
 
 const contestStore = useContestStore()
 
@@ -25,10 +25,10 @@ const handleCurrentChange = (page: number) => {
     getContests()
 }
 
-const contestSet = ref<getContestsReq[]>([])
+const contestSet = ref<contest[]>([])
 
 const getContests = async () => {
-    const res = await useContestStore(req.value)
+    const res = await contestStore.getContests(req.value)
     contestSet.value = res.contests
     total.value = res.total
 }
@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <CardItem>
+    <CardItem class="contests-card">
         <template #title>
             比赛列表
         </template>
@@ -51,13 +51,13 @@ onMounted(() => {
             <div class="contest-list">
                 <div class="contest-item">
                     <div class="contest-icon">
-                        <img src="@/assets/contest.png" class="contest-img"/>
+                        <img src="@/assets/contest.png" class="contest-img" />
                     </div>
                     <div class="contest-detail">
                         <div class="contest-title">
                             测试比赛1
                             <el-icon v-if=true class="lock-icon">
-                                <Lock/>
+                                <Lock />
                             </el-icon>
                         </div>
                         <div class="contest-meta">
@@ -73,7 +73,7 @@ onMounted(() => {
 
                 <div class="contest-item">
                     <div class="contest-icon">
-                        <img src="@/assets/contest.png" class="contest-img"/>
+                        <img src="@/assets/contest.png" class="contest-img" />
                     </div>
                     <div class="contest-detail">
                         <div class="contest-title">
@@ -93,7 +93,7 @@ onMounted(() => {
 
                 <div class="contest-item">
                     <div class="contest-icon">
-                        <img src="@/assets/contest.png" class="contest-img"/>
+                        <img src="@/assets/contest.png" class="contest-img" />
                     </div>
                     <div class="contest-detail">
                         <div class="contest-title">测试比赛1</div>
@@ -111,14 +111,16 @@ onMounted(() => {
 
         </template>
     </CardItem>
-    <el-pagination v-model:current-page="pageInfo.page" v-model:page-size="pageInfo.size"
-                   :page-sizes="[20, 50, 100, 200]"
-                   background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                   @size-change="handleSizeChange"
-                   @current-change="handleCurrentChange" style="margin-top: 20px; justify-content: flex-end"/>
+    <el-pagination v-model:current-page="req.page" v-model:page-size="req.size" :page-sizes="[20, 50, 100, 200]"
+        background layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange" style="margin-top: 20px; justify-content: flex-end" />
 </template>
 
 <style scoped>
+.contests-card {
+    margin: 20px 150px;
+}
+
 .contest-list {
     padding-top: 10px;
 }

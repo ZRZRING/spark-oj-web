@@ -11,9 +11,9 @@ export const constantRoute = [
                 component: () => import('@/views/home/HomeView.vue'),
             },
             {
-                path: 'judge',
-                name: 'judge',
-                component: () => import('@/views/home/SubmissionView.vue'),
+                path: 'submissions',
+                name: 'submissions',
+                component: () => import('@/views/home/SubmissionsView.vue'),
             },
             {
                 path: 'problems',
@@ -26,8 +26,8 @@ export const constantRoute = [
                 component: () => import('@/views/home/ProblemView.vue'),
             },
             {
-                path: 'contest',
-                name: 'contest',
+                path: 'contests',
+                name: 'contests',
                 component: () => import('@/views/home/ContestsView.vue'),
             },
             {
@@ -55,6 +55,8 @@ export const constantRoute = [
     {
         path: '/admin',
         name: 'admin',
+        meta: {requiresAdmin: true},
+        redirect: '/admin/problems',
         component: () => import('@/views/Admin.vue'),
         children: [
             {

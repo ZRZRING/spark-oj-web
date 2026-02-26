@@ -12,3 +12,5 @@ pnpm run dev
 3. 一级页面放置在 views 根目录，二级及以上页面以 View 结尾放置在同一级页面的文件夹内。
 4. typescript 建议每个独立元素前后具有一个空行分隔。
 5. 禁止直接引用基本类型，必须用特定名称继承后使用。
+
+上面我嵌入到 `.github\copilot-instructions.md` 了，后续这里不再添加内容。
