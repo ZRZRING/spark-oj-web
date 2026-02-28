@@ -1,8 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import {constantRoute} from './routes';
 import {ElNotification} from 'element-plus';
-import {useUserStore} from '@/stores/user_store';
 import {TEXT} from '@/config/zh-cn';
+import {useUserStore} from "@/stores/user.ts";
 
 const router = createRouter({
     history: createWebHistory(),

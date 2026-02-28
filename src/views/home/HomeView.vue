@@ -51,13 +51,14 @@ import CardItem from '@/components/CardItem.vue'
 
 <style scoped>
 .announcement-card {
-    margin: 20px 150px;
+    margin: 20px auto;
+    max-width: 1100px;
 }
 
 .announcement-list {
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid #eaeaea;
+    border-bottom: 1px solid var(--el-border-color-light);
     padding: 10px;
 }
 </style>

@@ -1,32 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import type { getProblemsReq, problem } from '@/stores/problem_type.ts'
-import { useProblemStore } from '@/stores/problem_store.ts'
 import CardItem from '@/components/CardItem.vue'
+import { usePagedList } from '@/composables/usePagedList'
+import {type getProblemsData, type getProblemsReq, type problem, useProblemStore} from "@/stores/problem.ts";
 
 const problemStore = useProblemStore()
 
-const pageInfo = ref<getProblemsReq>({
-    page: 1,
-    size: 50,
-})
-const total = ref<number>(0)
-const handleSizeChange = (size: number) => {
-    pageInfo.value.size = size
-    getProblems()
-}
-const handleCurrentChange = (page: number) => {
-    pageInfo.value.page = page
-    getProblems()
-}
-const problemSet = ref<problem[]>([])
-const getProblems = async () => {
-    const res = await problemStore.getProblems(pageInfo.value)
-    problemSet.value = res.problems
-    total.value = res.total
-}
-onMounted(async () => {
-    getProblems()
+const {
+    request: pageInfo,
+    items: problemSet,
+    total,
+    loading,
+    handleSizeChange,
+    handleCurrentChange,
+} = usePagedList<getProblemsReq, getProblemsData, problem>({
+    initialRequest: {
+        page: 1,
+        size: 50,
+    },
+    fetcher: (req) => problemStore.getProblems(req),
+    selectItems: (data) => data.problems,
+    selectTotal: (data) => data.total,
 })
 
 </script>
@@ -37,11 +30,11 @@ onMounted(async () => {
             题目列表
         </template>
         <template #content>
-            <el-table :data="problemSet">
+            <el-table :data="problemSet" v-loading="loading">
                 <el-table-column prop="pid" label="题目ID" />
                 <el-table-column prop="title" label="题目名称">
                     <template #default="{ row }">
-                        <el-link :href="`/problem/${row.pid}`" :underline="false">{{ row.title }}</el-link>
+                        <router-link :to="`/problem/${row.pid}`">{{ row.title }}</router-link>
                     </template>
                 </el-table-column>
                 <el-table-column prop="type" label="题目类型" />
@@ -58,6 +51,7 @@ onMounted(async () => {
 
 <style scoped>
 .problems-card {
-    margin: 20px 150px;
+    margin: 20px auto;
+    max-width: 1100px;
 }
 </style>

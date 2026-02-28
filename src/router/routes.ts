@@ -18,7 +18,7 @@ export const constantRoute = [
             {
                 path: 'problems',
                 name: 'problems',
-                component: () => import('@/views/home/ProblemsView.vue'),
+                component: () => import('@/views/home/ProblemListView.vue'),
             },
             {
                 path: 'problem/:pid',
@@ -28,7 +28,7 @@ export const constantRoute = [
             {
                 path: 'contests',
                 name: 'contests',
-                component: () => import('@/views/home/ContestsView.vue'),
+                component: () => import('@/views/home/ContestListView.vue'),
             },
             {
                 path: 'contest/:cid',
@@ -62,7 +62,7 @@ export const constantRoute = [
             {
                 path: 'problems',
                 name: 'adminProblems',
-                component: () => import('@/views/admin/ProblemsView.vue'),
+                component: () => import('@/views/admin/ProblemListView.vue'),
             },
             {
                 path: 'problem/create',

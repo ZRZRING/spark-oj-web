@@ -2,9 +2,9 @@
 import FooterItem from '@/components/FooterItem.vue'
 import { User } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user_store.ts'
 import { ElMessageBox, ElNotification } from 'element-plus';
 import { TEXT } from '@/config/zh-cn.ts'
+import {useUserStore} from "@/stores/user.ts";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -29,7 +29,7 @@ const onCommand = async (toPath: string | number | object) => {
         userStore.logout();
         await router.push('/login');
     } else if (command === 'profile') {
-        const username = localStorage.getItem('username');
+        const username = userStore.username;
         if (!username) {
             ElNotification({ type: 'error', message: '未找到当前用户名，请重新登录' });
             return;
@@ -75,33 +75,6 @@ const onCommand = async (toPath: string | number | object) => {
                         <span class="menu-item">新建题目</span>
                     </el-menu-item>
                 </el-sub-menu>
-                <!-- 标签管理 -->
-                <!--                <el-sub-menu index="/admin/tag">-->
-                <!--                    <template #title>-->
-                <!--                        <el-icon>-->
-                <!--                            <User/>-->
-                <!--                        </el-icon>-->
-                <!--                        <span class="menu-item">标签管理</span>-->
-                <!--                    </template>-->
-                <!--                    <el-menu-item index="/admin/tag/list">-->
-                <!--                        <el-icon>-->
-                <!--                            <User/>-->
-                <!--                        </el-icon>-->
-                <!--                        <span class="menu-item">标签管理</span>-->
-                <!--                    </el-menu-item>-->
-                <!--                </el-sub-menu>-->
-                <!--                <el-menu-item index="/admin/tag">-->
-                <!--                    <el-icon>-->
-                <!--                        <User/>-->
-                <!--                    </el-icon>-->
-                <!--                    <span class="menu-item">标签管理</span>-->
-                <!--                </el-menu-item>-->
-                <!--                <el-menu-item index="/admin/user">-->
-                <!--                    <el-icon>-->
-                <!--                        <User/>-->
-                <!--                    </el-icon>-->
-                <!--                    <span class="menu-item">标签管理</span>-->
-                <!--                </el-menu-item>-->
             </el-menu>
         </el-aside>
         <el-container>
@@ -112,13 +85,9 @@ const onCommand = async (toPath: string | number | object) => {
                 <el-dropdown placement="bottom-end" @command="onCommand">
                     <span class="el-dropdown_box">
                         <h3>admin</h3>
-                        <!-- <el-icon>
-                <CaretBottom />
-              </el-icon> -->
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-
                             <el-dropdown-item command="profile">个人资料</el-dropdown-item>
                             <el-dropdown-item command="password">修改密码</el-dropdown-item>
                             <el-dropdown-item command="submission">个人提交</el-dropdown-item>
@@ -130,7 +99,6 @@ const onCommand = async (toPath: string | number | object) => {
                 </el-dropdown>
             </el-header>
             <el-main>
-                <!-- 路由出口 -->
                 <router-view></router-view>
             </el-main>
             <el-footer>

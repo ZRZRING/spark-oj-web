@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router';
-import { useUserStore } from '@/stores/user_store.ts'
-import type {getProfileData} from '@/stores/user_type.ts'
-import {onMounted, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
+import {type getProfileData, useUserStore} from "@/stores/user.ts";
 
 const route = useRoute();
 const userStore = useUserStore();
-const username = String(route.params.username ?? '');
+const username = computed(() => String(route.params.username ?? ''));
 
 const profile = ref<getProfileData | null>(null)
 
-onMounted(async () => {
-    if (!username) {
+const loadProfile = async (name: string) => {
+    if (!name) {
+        profile.value = null;
         return;
     }
     try {
-        const res = await userStore.getProfile(username);
+        const res = await userStore.getProfile(name);
         profile.value = res;
     } catch (error) {
         console.error('加载用户信息失败:', error)
     }
-})
+};
+
+watch(username, (name) => {
+    loadProfile(name);
+}, {immediate: true})
 </script>
 
 <template>

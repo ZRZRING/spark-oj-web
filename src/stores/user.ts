@@ -1,22 +1,66 @@
-import service from "@/utils/service.ts";
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import type {
-    loginData,
-    loginReq,
-    loginRes,
-    getProfileReq,
-    getProfileRes,
-    registerReq,
-    registerRes,
-    getProfileData,
-    getAdminProtectedReq,
-    getAdminProtectedRes,
-    userRole
-} from "@/stores/user_type.ts";
+import service from "@/utils/service.ts";
+import type {response} from "@/stores/type.ts";
+
+export interface profile {
+    nickname: string;
+    email: string;
+    avatar: string;
+    sex: string;
+    school: string;
+    department: string;
+    major: string;
+    description: string;
+}
+
+export interface loginReq {
+    username: string;
+    password: string;
+}
+
+export interface loginData {
+    token: string;
+}
+
+export interface loginRes extends response<loginData> {
+}
+
+export interface registerReq {
+    username: string;
+    password: string;
+    rePassword: string;
+}
+
+export interface registerRes extends response {
+}
+
+export interface getProfileReq {
+    username: string;
+}
+
+export interface getProfileData extends profile {
+}
+
+export interface getProfileRes extends response<getProfileData> {
+}
+
+export type userRole = 'admin' | 'user';
+
+export interface getAdminProtectedReq {
+}
+
+export interface getAdminProtectedData {
+    username: string;
+    user_role: userRole;
+}
+
+export interface getAdminProtectedRes extends response<getAdminProtectedData> {
+}
 
 export const useUserStore = defineStore("user", () => {
     const token = ref(localStorage.getItem("token"));
+    const username = ref(localStorage.getItem("username"));
     const adminRole = ref<userRole | null>(null);
     const isLoggedIn = computed(() => !!token.value);
     const isAdmin = computed(() => adminRole.value === 'admin');
@@ -25,6 +69,7 @@ export const useUserStore = defineStore("user", () => {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
         token.value = null;
+        username.value = null;
         adminRole.value = null;
     };
 
@@ -33,6 +78,7 @@ export const useUserStore = defineStore("user", () => {
         token.value = res.data.token;
         localStorage.setItem("token", res.data.token);
         adminRole.value = null;
+        username.value = req.username;
         localStorage.setItem("username", req.username);
         return res.data;
     };
@@ -44,6 +90,7 @@ export const useUserStore = defineStore("user", () => {
         }
         const res = await service.get<getAdminProtectedReq, getAdminProtectedRes>("/admin/protected");
         adminRole.value = res.data.user_role;
+        username.value = res.data.username;
         localStorage.setItem("username", res.data.username);
         return res.data.user_role === 'admin';
     };
@@ -58,5 +105,5 @@ export const useUserStore = defineStore("user", () => {
         return res.data!;
     };
 
-    return {isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess};
+    return {token, username, adminRole, isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess};
 });

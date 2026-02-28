@@ -5,8 +5,7 @@ import { User } from '@element-plus/icons-vue'
 <template>
     <el-aside width="200px" class="admin-aside">
         <div class="admin-aside-logo"></div>
-        <el-menu active-text-color="#CCFF66" background-color="#646464" :default-active="$route.path" text-color="#fff"
-            router>
+        <el-menu :default-active="$route.path" router>
             <el-sub-menu index="/admin/problem">
                 <template #title>
                     <el-icon>
@@ -33,7 +32,7 @@ import { User } from '@element-plus/icons-vue'
 
 <style scoped>
 .admin-aside {
-    background-color: #646464;
+    background-color: var(--el-menu-bg-color);
 }
 
 .admin-aside-logo {
@@ -43,6 +42,10 @@ import { User } from '@element-plus/icons-vue'
 
 .el-menu {
     border-right: none;
+    --el-menu-bg-color: var(--el-color-info-dark-2);
+    --el-menu-text-color: var(--el-color-white);
+    --el-menu-hover-bg-color: var(--el-color-info);
+    --el-menu-active-color: var(--el-color-primary-light-5);
 }
 
 .menu-item {

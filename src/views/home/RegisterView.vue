@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { User, Lock, CircleCheck } from '@element-plus/icons-vue'
-import { useUserStore } from '@/stores/user_store.ts'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { registerReq } from '@/stores/user_type'
 import { useRouter } from 'vue-router'
 import { ENUM } from '@/config/enum'
 import { Notify } from "@/utils/notify.ts";
 import { TEXT } from "@/config/zh-cn.ts";
+import {type registerReq, useUserStore} from "@/stores/user.ts";
 
 const router = useRouter();
 const userStore = useUserStore();

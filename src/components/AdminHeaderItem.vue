@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user_store.ts'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { TEXT } from '@/config/zh-cn.ts'
+import {useUserStore} from "@/stores/user.ts";
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -30,7 +30,7 @@ const onCommand = async (toPath: string | number | object) => {
     }
 
     if (command === 'profile') {
-        const username = localStorage.getItem('username')
+        const username = userStore.username
         if (!username) {
             ElNotification({ type: 'error', message: '未找到当前用户名，请重新登录' })
             return

@@ -1,33 +1,28 @@
 <script setup lang="ts">
 
 import CardItem from '@/components/CardItem.vue'
-import { onMounted, ref } from 'vue';
-import type { getSubmissionsReq, submission } from "@/stores/submission_type.ts";
-import { useSubmissionStore } from "@/stores/submission_store.ts";
+import { usePagedList } from '@/composables/usePagedList';
+import {
+    type getSubmissionsData,
+    type getSubmissionsReq,
+    type submission,
+    useSubmissionStore
+} from "@/stores/submission.ts";
 
 const submissionStore = useSubmissionStore();
 
-const req = ref<getSubmissionsReq>({ page: 1, size: 50 })
-
-const total = ref<number>(0)
-const submissions = ref<submission[]>([])
-
-const handleSizeChange = (size: number) => {
-    req.value.size = size
-    getSubmissions()
-}
-const handleCurrentChange = (page: number) => {
-    req.value.page = page
-    getSubmissions()
-}
-
-const getSubmissions = async () => {
-    const res = await submissionStore.getSubmissions(req.value)
-    submissions.value = res.submissions
-    total.value = res.total
-}
-onMounted(() => {
-    getSubmissions()
+const {
+    request: req,
+    items: submissions,
+    total,
+    loading,
+    handleSizeChange,
+    handleCurrentChange,
+} = usePagedList<getSubmissionsReq, getSubmissionsData, submission>({
+    initialRequest: { page: 1, size: 50 },
+    fetcher: (request) => submissionStore.getSubmissions(request),
+    selectItems: (data) => data.submissions,
+    selectTotal: (data) => data.total,
 })
 
 </script>
@@ -41,16 +36,9 @@ onMounted(() => {
             <div>评测筛选条件</div>
         </template>
         <template #content>
-            <el-table style="width: 100%">
-                <el-table-column prop="name" label="ID" width="180" />
-                <el-table-column prop="date" label="提交时间" width="180" />
-                <el-table-column prop="user_id" label="用户ID" width="180" />
-                <el-table-column prop="problem_id" label="题目ID" width="180" />
-                <el-table-column prop="problem_name" label="评测结果" width="180" />
-                <el-table-column prop="result" label="结果" width="180" />
-                <el-table-column prop="time" label="时间" width="180" />
-                <el-table-column prop="memory" label="内存" width="180" />
-                <el-table-column prop="language" label="语言" width="180" />
+            <el-table :data="submissions" style="width: 100%" v-loading="loading">
+                <el-table-column prop="sid" label="提交ID" width="220" />
+                <el-table-column prop="title" label="题目标题" min-width="300" />
             </el-table>
         </template>
     </CardItem>
@@ -61,6 +49,7 @@ onMounted(() => {
 
 <style scoped>
 .submission-card {
-    margin: 20px 150px;
+    margin: 20px auto;
+    max-width: 1100px;
 }
 </style>

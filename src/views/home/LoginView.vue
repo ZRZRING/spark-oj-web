@@ -3,13 +3,12 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElNotification } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
-import { useUserStore } from '@/stores/user_store.ts'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { loginReq } from '@/stores/user_type'
 import { useRouter } from 'vue-router'
 import { ENUM } from '@/config/enum.ts'
 import { TEXT } from '@/config/zh-cn.ts'
 import { Notify } from "@/utils/notify.ts";
+import {type loginReq, useUserStore} from "@/stores/user.ts";
 
 const router = useRouter();
 const userStore = useUserStore();

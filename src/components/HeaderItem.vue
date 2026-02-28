@@ -2,10 +2,10 @@
 
 import { computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user_store'
 import { ElMessageBox, ElNotification } from 'element-plus';
 import { SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { TEXT } from "@/config/zh-cn.ts";
+import {useUserStore} from "@/stores/user.ts";
 
 const userStore = useUserStore();
 
@@ -50,7 +50,7 @@ watch(
 );
 
 const handleLogin = () => {
-    if (localStorage.getItem('token') !== null) {
+    if (userStore.isLoggedIn) {
         router.push('/');
     } else {
         router.push('/login');
@@ -58,7 +58,7 @@ const handleLogin = () => {
 };
 
 const handleRegister = () => {
-    if (localStorage.getItem('token') !== null) {
+    if (userStore.isLoggedIn) {
         router.push('/');
     } else {
         router.push('/register');
@@ -66,7 +66,7 @@ const handleRegister = () => {
 };
 
 const handleLogout = () => {
-    if (localStorage.getItem('token') !== null) {
+    if (userStore.isLoggedIn) {
         userStore.logout();
         router.push('/');
     } else {
@@ -94,7 +94,7 @@ const onCommand = async (command: string) => {
         return;
     }
     if (command === 'profile') {
-        const username = localStorage.getItem('username');
+        const username = userStore.username;
         if (!username) {
             ElNotification({ type: 'error', message: '未找到当前用户名，请重新登录' });
             return;
