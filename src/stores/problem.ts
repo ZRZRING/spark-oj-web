@@ -5,6 +5,10 @@ import type {pageInfoReq, pageInfoRes, response} from "@/stores/type.ts";
 export interface problem {
     pid: string;
     title: string;
+    judgeType: number;
+    rating: number;
+    total?: number;
+    accepted?: number;
 }
 
 export interface getProblemsReq extends pageInfoReq {

@@ -52,7 +52,7 @@ export interface getAdminProtectedReq {
 
 export interface getAdminProtectedData {
     username: string;
-    user_role: userRole;
+    userRole: userRole;
 }
 
 export interface getAdminProtectedRes extends response<getAdminProtectedData> {
@@ -89,10 +89,10 @@ export const useUserStore = defineStore("user", () => {
             return false;
         }
         const res = await service.get<getAdminProtectedReq, getAdminProtectedRes>("/admin/protected");
-        adminRole.value = res.data.user_role;
+        adminRole.value = res.data.userRole;
         username.value = res.data.username;
         localStorage.setItem("username", res.data.username);
-        return res.data.user_role === 'admin';
+        return res.data.userRole === 'admin';
     };
 
     const register = async (req: registerReq) => {

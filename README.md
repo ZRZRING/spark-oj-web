@@ -7,10 +7,8 @@ pnpm run dev
 
 ### 开发规范
 
-1. 子路由使用继承父路由写法，不以 `/` 开头。
-2. 列表元素命名，定义为其元素的复数，如比赛列表的视图定义为 `ContestsView.vue`。
-3. 一级页面放置在 views 根目录，二级及以上页面以 View 结尾放置在同一级页面的文件夹内。
-4. typescript 建议每个独立元素前后具有一个空行分隔。
-5. 禁止直接引用基本类型，必须用特定名称继承后使用。
+现在基本都是用 AI 编程，推荐使用 Vue 的 Skills
 
-上面我嵌入到 `.github\copilot-instructions.md` 了，后续这里不再添加内容。
+https://github.com/vuejs-ai/skills
+
+库太大了我就没放在项目里，直接下载使用即可。
