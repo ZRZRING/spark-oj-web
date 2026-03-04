@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import CardItem from '@/components/CardItem.vue'
 import type { pageInfoReq } from '@/stores/type'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
-import {type getProblemsData, type problem, useProblemStore} from "@/stores/problem.ts";
+import { computed, ref } from 'vue'
+import { type getProblemsData, type problem, useProblemStore } from '@/stores/problem.ts'
+import { getJudgeTypeLabel } from '@/utils/judgeType.ts'
+import type { TableInstance } from 'element-plus'
 
 const router = useRouter()
 const problemStore = useProblemStore()
@@ -26,6 +28,33 @@ const {
     selectTotal: (data) => data.total,
 })
 
+const tableRef = ref<TableInstance>()
+const selectedRows = ref<problem[]>([])
+const keyword = ref('')
+
+const visibleProblemSet = computed(() => {
+    const keywordText = keyword.value.trim().toLowerCase()
+    if (!keywordText) {
+        return adminProblemset.value
+    }
+    return adminProblemset.value.filter((item) => {
+        return item.pid.toLowerCase().includes(keywordText)
+            || item.title.toLowerCase().includes(keywordText)
+    })
+})
+
+const handleSelectionChange = (rows: problem[]) => {
+    selectedRows.value = rows
+}
+
+const handleSelectAll = () => {
+    tableRef.value?.toggleAllSelection()
+}
+
+const handleCancelSelect = () => {
+    tableRef.value?.clearSelection()
+}
+
 const handleCreate = () => {
     router.push('/admin/problem/create')
 }
@@ -41,35 +70,153 @@ const handleTestData = (pid: string) => {
 const handleDelete = (pid: string) => {
     ElNotification({ type: 'warning', message: `删除题目 ${pid} 功能暂未开放` })
 }
+
+const handleToggleVisible = (pid: string, visible: boolean) => {
+    ElNotification({
+        type: 'warning',
+        message: `题目 ${pid} ${visible ? '前台可见' : '前台隐藏'} 功能暂未开放`,
+    })
+}
+
+const handlePageSizeSelect = (value: string | number) => {
+    handleSizeChange(Number(value))
+}
+
+const handleVisibleSwitchChange = (pid: string, value: string | number | boolean) => {
+    handleToggleVisible(pid, Boolean(value))
+}
 </script>
 
 <template>
-    <CardItem>
-        <template #title>
-            <span>题库</span>
+    <el-card shadow="never" class="problem-list-card">
+        <template #header>
+            <el-row justify="space-between" align="middle" :gutter="12">
+                <el-col :xs="24" :sm="10">
+                    <el-text tag="b" size="large">问题管理</el-text>
+                </el-col>
+                <el-col :xs="24" :sm="14">
+                    <el-space wrap alignment="center" style="width: 100%; justify-content: flex-end;">
+                        <el-input
+                            v-model="keyword"
+                            clearable
+                            placeholder="题目编号 / 标题 / 来源 / 创建人"
+                            style="width: 280px;"
+                        />
+                        <el-select
+                            :model-value="pageInfo.size"
+                            style="width: 120px;"
+                            @change="handlePageSizeSelect"
+                        >
+                            <el-option :value="20" label="20 题每页" />
+                            <el-option :value="50" label="50 题每页" />
+                            <el-option :value="100" label="100 题每页" />
+                            <el-option :value="200" label="200 题每页" />
+                        </el-select>
+                        <el-button type="primary" plain @click="handleCreate">新建题目</el-button>
+                    </el-space>
+                </el-col>
+            </el-row>
         </template>
-        <template #extra>
-            <el-button type="primary" @click="handleCreate">新建题目</el-button>
-        </template>
-        <template #content>
-            <el-table :data="adminProblemset" style="width: 100%" v-loading="loading">
-                <el-table-column type="selection" width="55" />
-                <el-table-column prop="pid" label="ID" width="180" />
-                <el-table-column prop="title" label="题目名称" min-width="240" />
-                <el-table-column fixed="right" label="操作" width="180">
-                    <template #default="{ row }">
-                        <el-button type="primary" @click="handleEdit(row.pid)">编辑</el-button>
-                        <el-button type="success" @click="handleTestData(row.pid)">测试数据</el-button>
-                        <el-button type="danger" @click="handleDelete(row.pid)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </template>
-    </CardItem>
-    <el-pagination v-model:current-page="pageInfo.page" v-model:page-size="pageInfo.size"
-        :page-sizes="[20, 50, 100, 200]" background layout="total, sizes, prev, pager, next, jumper" :total="total"
-        @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        style="margin-top: 20px; justify-content: flex-end" />
+
+        <el-space wrap alignment="center" class="toolbar-row">
+            <el-pagination
+                small
+                layout="prev, pager, next"
+                :current-page="pageInfo.page"
+                :page-size="pageInfo.size"
+                :total="total"
+                @current-change="handleCurrentChange"
+            />
+            <el-divider direction="vertical" />
+            <el-button size="small" @click="handleSelectAll">全选</el-button>
+            <el-button size="small" @click="handleCancelSelect">取消</el-button>
+            <el-text size="small" type="info">已选 {{ selectedRows.length }} 项</el-text>
+        </el-space>
+
+        <el-table
+            ref="tableRef"
+            :data="visibleProblemSet"
+            v-loading="loading"
+            row-key="pid"
+            @selection-change="handleSelectionChange"
+        >
+            <el-table-column type="selection" width="48" />
+            <el-table-column prop="pid" label="题号" width="90" />
+            <el-table-column prop="title" label="题目" min-width="280" />
+            <el-table-column label="类型" width="120">
+                <template #default="{ row }">
+                    {{ getJudgeTypeLabel(row.judgeType) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="出处" width="120">
+                <template #default>
+                    -
+                </template>
+            </el-table-column>
+            <el-table-column label="特别" width="80">
+                <template #default>
+                    -
+                </template>
+            </el-table-column>
+            <el-table-column label="AC(人数)/提交" width="140">
+                <template #default>
+                    -
+                </template>
+            </el-table-column>
+            <el-table-column label="创建时间" width="170">
+                <template #default>
+                    -
+                </template>
+            </el-table-column>
+            <el-table-column label="创建人" width="100">
+                <template #default>
+                    -
+                </template>
+            </el-table-column>
+            <el-table-column label="前台可见" width="110" align="center">
+                <template #default="{ row }">
+                    <el-switch
+                        :model-value="true"
+                        @change="handleVisibleSwitchChange(row.pid, $event)"
+                    />
+                </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="220">
+                <template #default="{ row }">
+                    <el-space :size="6" wrap>
+                        <el-button type="primary" link @click="handleEdit(row.pid)">编辑</el-button>
+                        <el-button type="success" link @click="handleTestData(row.pid)">测试数据</el-button>
+                        <el-button type="danger" link @click="handleDelete(row.pid)">删除</el-button>
+                    </el-space>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+            v-model:current-page="pageInfo.page"
+            v-model:page-size="pageInfo.size"
+            :page-sizes="[20, 50, 100, 200]"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            class="bottom-pagination"
+        />
+    </el-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.problem-list-card {
+    margin: 16px;
+}
+
+.toolbar-row {
+    margin-bottom: 12px;
+}
+
+.bottom-pagination {
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+</style>

@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessageBox, ElNotification } from 'element-plus';
 import { SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { TEXT } from "@/config/zh-cn.ts";
-import {useUserStore} from "@/stores/user.ts";
+import { useUserStore } from "@/stores/user.ts";
 
 const userStore = useUserStore();
 

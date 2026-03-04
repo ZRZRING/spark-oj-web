@@ -7,8 +7,6 @@ export interface problem {
     title: string;
     judgeType: number;
     rating: number;
-    total?: number;
-    accepted?: number;
 }
 
 export interface getProblemsReq extends pageInfoReq {
@@ -21,18 +19,25 @@ export interface getProblemsData extends pageInfoRes {
 export interface getProblemsRes extends response<getProblemsData> {
 }
 
-export interface problemDetailReq {
+export interface problemDetail {
     pid: string;
     title: string;
+    judgeType: string;
     timeLimit: number;
     memoryLimit: number;
-    total: number;
-    accepted: number;
-    difficulty: string;
-    uploader: string;
-    text: string;
-    type: string;
-    tag: string[];
+    rating: string;
+    createBy: string;
+    content: string;
+}
+
+export interface getProblemDetailReq {
+    pid: string;
+}
+
+export interface getProblemDetailData extends problemDetail {
+}
+
+export interface getProblemDetailRes extends response<getProblemDetailData> {
 }
 
 export const useProblemStore = defineStore("problem", () => {
@@ -41,5 +46,10 @@ export const useProblemStore = defineStore("problem", () => {
         return res.data!;
     }
 
-    return {getProblems}
+    const getProblemDetail = async (req: getProblemDetailReq): Promise<getProblemDetailData> => {
+        const res = await service.get<getProblemDetailReq, getProblemDetailRes>(`/problem/${req.pid}`);
+        return res.data!;
+    }
+
+    return {getProblems, getProblemDetail}
 })

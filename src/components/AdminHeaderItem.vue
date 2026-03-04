@@ -2,10 +2,11 @@
 import { useRouter } from 'vue-router'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { TEXT } from '@/config/zh-cn.ts'
-import {useUserStore} from "@/stores/user.ts";
+import { useUserStore } from "@/stores/user.ts";
 
 const userStore = useUserStore()
 const router = useRouter()
+const displayName = userStore.username || 'admin'
 
 const onCommand = async (toPath: string | number | object) => {
     if (!userStore.isLoggedIn) {
@@ -59,43 +60,27 @@ const onCommand = async (toPath: string | number | object) => {
 </script>
 
 <template>
-    <el-header class="admin-header">
-        <div class="home-title">
-            <h1>程序设计评测平台后台</h1>
-        </div>
-        <el-dropdown placement="bottom-end" @command="onCommand">
-            <span class="el-dropdown-box">
-                <h3>admin</h3>
-            </span>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item command="profile">个人资料</el-dropdown-item>
-                    <el-dropdown-item command="password">修改密码</el-dropdown-item>
-                    <el-dropdown-item command="submission">个人提交</el-dropdown-item>
-                    <el-dropdown-item command="signup">我的竞赛</el-dropdown-item>
-                    <el-dropdown-item command="home">返回前台</el-dropdown-item>
-                    <el-dropdown-item command="logout">退出登录</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
+    <el-header>
+        <el-row justify="space-between" align="middle" style="height: 100%; width: 100%;">
+            <el-text tag="b" size="large">程序设计评测平台后台</el-text>
+            <el-dropdown placement="bottom-end" @command="onCommand">
+                <span>
+                    <el-space alignment="center" :size="8">
+                        <el-avatar :size="28">{{ displayName.slice(0, 1).toUpperCase() }}</el-avatar>
+                        <el-text>{{ displayName }}</el-text>
+                    </el-space>
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item command="profile">个人资料</el-dropdown-item>
+                        <el-dropdown-item command="password">修改密码</el-dropdown-item>
+                        <el-dropdown-item command="submission">个人提交</el-dropdown-item>
+                        <el-dropdown-item command="signup">我的竞赛</el-dropdown-item>
+                        <el-dropdown-item command="home">返回前台</el-dropdown-item>
+                        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+        </el-row>
     </el-header>
 </template>
-
-<style scoped>
-.admin-header {
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.home-title {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.el-dropdown-box {
-    display: flex;
-    align-items: center;
-}
-</style>
