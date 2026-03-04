@@ -1,4 +1,4 @@
-# Spark OJ Web - Copilot Instructions
+# Spark OJ Web
 
 本文件用于约束本项目内 AI 代码生成与修改行为，适用于整个仓库。
 
