@@ -5,7 +5,7 @@ import { ElNotification } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { type getProblemsData, type problem, useProblemStore } from '@/stores/problem.ts'
-import { getJudgeTypeLabel } from '@/utils/judgeType.ts'
+import { getJudgeTypeLabel } from '@/utils/enum.ts'
 import type { TableInstance } from 'element-plus'
 
 const router = useRouter()
@@ -60,7 +60,7 @@ const handleCreate = () => {
 }
 
 const handleEdit = (pid: string) => {
-    ElNotification({ type: 'warning', message: `编辑题目 ${pid} 功能暂未开放` })
+    router.push(`/admin/problem/${pid}/edit`)
 }
 
 const handleTestData = (pid: string) => {
@@ -146,16 +146,6 @@ const handleVisibleSwitchChange = (pid: string, value: string | number | boolean
             <el-table-column label="类型" width="120">
                 <template #default="{ row }">
                     {{ getJudgeTypeLabel(row.judgeType) }}
-                </template>
-            </el-table-column>
-            <el-table-column label="出处" width="120">
-                <template #default>
-                    -
-                </template>
-            </el-table-column>
-            <el-table-column label="特别" width="80">
-                <template #default>
-                    -
                 </template>
             </el-table-column>
             <el-table-column label="AC(人数)/提交" width="140">

@@ -69,6 +69,11 @@ export const constantRoute = [
                 name: 'adminCreateProblem',
                 component: () => import('@/views/admin/CreateProblemView.vue'),
             },
+            {
+                path: 'problem/:pid/edit',
+                name: 'adminEditProblem',
+                component: () => import('@/views/admin/CreateProblemView.vue'),
+            },
             // {
             //     path: 'tags',
             //     name: 'tags',

@@ -50,14 +50,6 @@ const filteredProblems = computed(() => {
     })
 })
 
-const formatAcRate = (item: problem): string => {
-    if (typeof item.total !== 'number' || typeof item.accepted !== 'number' || item.total <= 0) {
-        return '-'
-    }
-    const rate = (item.accepted / item.total) * 100
-    return `${rate.toFixed(2)}%`
-}
-
 const handleReset = (): void => {
     keyword.value = ''
     difficultyFilter.value = 'all'
@@ -117,18 +109,6 @@ const handleReset = (): void => {
             <el-table-column label="Type" width="180">
                 <template #default="{ row }">
                     {{ getJudgeTypeLabel(row.judgeType) }}
-                </template>
-            </el-table-column>
-
-            <el-table-column label="Total" width="140">
-                <template #default="{ row }">
-                    {{ typeof row.total === 'number' ? row.total : '-' }}
-                </template>
-            </el-table-column>
-
-            <el-table-column label="AC Rate" width="140">
-                <template #default="{ row }">
-                    {{ formatAcRate(row) }}
                 </template>
             </el-table-column>
         </el-table>

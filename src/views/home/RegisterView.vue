@@ -3,10 +3,10 @@ import { ref, reactive, onMounted } from 'vue'
 import { User, Lock, CircleCheck } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { ENUM } from '@/config/enum'
 import { Notify } from "@/utils/notify.ts";
 import { TEXT } from "@/config/zh-cn.ts";
 import {type registerReq, useUserStore} from "@/stores/user.ts";
+import {ENUM} from "@/utils/consts.ts";
 
 const router = useRouter();
 const userStore = useUserStore();

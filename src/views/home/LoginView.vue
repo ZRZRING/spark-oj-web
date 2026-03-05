@@ -5,10 +5,10 @@ import { ElNotification } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { ENUM } from '@/config/enum.ts'
 import { TEXT } from '@/config/zh-cn.ts'
 import { Notify } from "@/utils/notify.ts";
-import {type loginReq, useUserStore} from "@/stores/user.ts";
+import { type loginReq, useUserStore } from "@/stores/user.ts";
+import { MAX_PASSWORD, MAX_USERNAME, MIN_PASSWORD, MIN_USERNAME } from "@/utils/consts.ts";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -17,15 +17,15 @@ const rules = reactive<FormRules<loginReq>>({
     username: [
         { trigger: 'change', required: true, message: TEXT.usernameRequired },
         {
-            trigger: 'blur', min: ENUM.MIN_USERNAME, max: ENUM.MAX_USERNAME,
-            message: TEXT.lengthRange(ENUM.MIN_USERNAME, ENUM.MAX_USERNAME),
+            trigger: 'blur', min: MIN_USERNAME, max: MAX_USERNAME,
+            message: TEXT.lengthRange(MIN_USERNAME, MAX_USERNAME),
         },
     ],
     password: [
         { trigger: 'change', required: true, message: TEXT.passwordRequired },
         {
-            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
-            message: TEXT.lengthRange(ENUM.MIN_PASSWORD, ENUM.MAX_PASSWORD),
+            trigger: 'blur', min: MIN_PASSWORD, max: MAX_PASSWORD,
+            message: TEXT.lengthRange(MIN_PASSWORD, MAX_PASSWORD),
         },
     ],
 });
