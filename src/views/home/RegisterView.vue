@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import { Notify } from "@/utils/notify.ts";
 import { TEXT } from "@/config/zh-cn.ts";
 import {type registerReq, useUserStore} from "@/stores/user.ts";
-import {ENUM} from "@/utils/consts.ts";
+import { MAX_PASSWORD, MAX_USERNAME, MIN_PASSWORD, MIN_USERNAME } from "@/utils/consts.ts";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -30,22 +30,22 @@ const rules = reactive<FormRules<registerReq>>({
     username: [
         { trigger: 'change', required: true, message: '请输入用户名' },
         {
-            trigger: 'blur', min: ENUM.MIN_USERNAME, max: ENUM.MAX_USERNAME,
-            message: `长度在 ${ENUM.MIN_USERNAME} 到 ${ENUM.MAX_USERNAME} 个字符`,
+            trigger: 'blur', min: MIN_USERNAME, max: MAX_USERNAME,
+            message: `长度在 ${MIN_USERNAME} 到 ${MAX_USERNAME} 个字符`,
         },
     ],
     password: [
         { trigger: 'change', required: true, message: '请输入密码' },
         {
-            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
-            message: `长度在 ${ENUM.MIN_PASSWORD} 到 ${ENUM.MAX_PASSWORD} 个字符`,
+            trigger: 'blur', min: MIN_PASSWORD, max: MAX_PASSWORD,
+            message: `长度在 ${MIN_PASSWORD} 到 ${MAX_PASSWORD} 个字符`,
         },
     ],
     rePassword: [
         { trigger: 'change', required: true, message: '请再次输入密码' },
         {
-            trigger: 'blur', min: ENUM.MIN_PASSWORD, max: ENUM.MAX_PASSWORD,
-            message: `长度在 ${ENUM.MIN_PASSWORD} 到 ${ENUM.MAX_PASSWORD} 个字符`,
+            trigger: 'blur', min: MIN_PASSWORD, max: MAX_PASSWORD,
+            message: `长度在 ${MIN_PASSWORD} 到 ${MAX_PASSWORD} 个字符`,
         },
         { trigger: 'blur', validator: checkRePassword, message: '两次密码不一致' }
     ]

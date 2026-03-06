@@ -29,6 +29,9 @@ importers:
       less-loader:
         specifier: ^12.3.0
         version: 12.3.0(less@4.4.1)
+      marked:
+        specifier: ^17.0.4
+        version: 17.0.4
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -1018,6 +1021,11 @@ packages:
   marked@14.0.0:
     resolution: {integrity: sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==}
     engines: {node: '>= 18'}
+    hasBin: true
+
+  marked@17.0.4:
+    resolution: {integrity: sha512-NOmVMM+KAokHMvjWmC5N/ZOvgmSWuqJB8FoYI019j4ogb/PeRMKoKIjReZ2w3376kkA8dSJIP8uD993Kxc0iRQ==}
+    engines: {node: '>= 20'}
     hasBin: true
 
   math-intrinsics@1.1.0:
@@ -2333,6 +2341,8 @@ snapshots:
     optional: true
 
   marked@14.0.0: {}
+
+  marked@17.0.4: {}
 
   math-intrinsics@1.1.0: {}
 

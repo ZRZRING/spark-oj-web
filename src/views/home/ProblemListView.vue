@@ -3,7 +3,7 @@ import { RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import {type getProblemsData, type getProblemsReq, type problem, useProblemStore} from "@/stores/problem.ts";
-import { getJudgeTypeLabel } from '@/utils/judgeType.ts'
+import { getJudgeTypeLabel } from '@/utils/enum.ts'
 
 const problemStore = useProblemStore()
 

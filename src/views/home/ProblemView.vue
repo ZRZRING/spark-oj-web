@@ -2,9 +2,9 @@
 import { ElMessage } from 'element-plus';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import DOMPurify from 'dompurify';
 import { type problemDetail, useProblemStore } from '@/stores/problem.ts';
-import { getJudgeTypeLabel } from '@/utils/judgeType.ts';
+import { getJudgeTypeLabel } from '@/utils/enum.ts';
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 
 const route = useRoute();
 const problemStore = useProblemStore();
@@ -13,7 +13,6 @@ const problemId = computed(() => String(route.params.pid ?? '1000'));
 const problemInfo = ref<problemDetail | null>(null);
 
 const loading = ref(false);
-const safeProblemText = computed(() => DOMPurify.sanitize(problemInfo.value?.content ?? ''));
 const judgeTypeLabel = computed(() => {
     const judgeTypeValue = Number(problemInfo.value?.judgeType ?? 0);
     return getJudgeTypeLabel(Number.isNaN(judgeTypeValue) ? 0 : judgeTypeValue);
@@ -26,8 +25,8 @@ const loadProblem = async (pid: string) => {
         problemInfo.value = {
             ...detail,
             pid,
-            judgeType: String(detail.judgeType),
-            rating: String(detail.rating),
+            judgeType: detail.judgeType,
+            rating: detail.rating,
         };
     } catch (error) {
         problemInfo.value = null;
@@ -53,7 +52,7 @@ const submitCode = async () => {
 </script>
 
 <template>
-    <el-row :gutter="16" style="padding: 16px;">
+    <el-row style="padding: 16px;">
         <el-col :xs="24" :sm="24" :md="24" :lg="24">
             <el-space direction="vertical" fill :size="16" style="width: 100%;">
                 <el-card v-loading="loading">
@@ -72,7 +71,7 @@ const submitCode = async () => {
                     <template #header>
                         <el-text tag="b">题面</el-text>
                     </template>
-                    <div v-html="safeProblemText"></div>
+                    <MarkdownRenderer :content="problemInfo?.content ?? ''" />
                 </el-card>
 
                 <el-card>
