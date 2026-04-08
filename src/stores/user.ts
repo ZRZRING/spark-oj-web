@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import service from "@/utils/service.ts";
-import type {response} from "@/stores/type.ts";
+import type {response, pageInfoReq, pageInfoRes} from "@/stores/type.ts";
 
 export interface profile {
     nickname: string;
@@ -58,6 +58,25 @@ export interface getAdminProtectedData {
 export interface getAdminProtectedRes extends response<getAdminProtectedData> {
 }
 
+export interface userItem {
+    username: string;
+    user_role: string;
+    create_time: string;
+    rating: string;
+}
+
+export interface getUsersReq extends pageInfoReq {
+    keyword?: string;
+}
+
+export interface getUsersData extends pageInfoRes {
+    users: userItem[];
+}
+
+export interface getUsersRes extends response<getUsersData> {
+}
+
+
 export const useUserStore = defineStore("user", () => {
     const token = ref(localStorage.getItem("token"));
     const username = ref(localStorage.getItem("username"));
@@ -105,5 +124,10 @@ export const useUserStore = defineStore("user", () => {
         return res.data!;
     };
 
-    return {token, username, adminRole, isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess};
+    const getUsers = async (req: getUsersReq): Promise<getUsersData> => {
+        const res = await service.get<getUsersReq, getUsersRes>("/users", { params: req });
+        return res.data!;
+    };
+
+    return {token, username, adminRole, isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess, getUsers};
 });

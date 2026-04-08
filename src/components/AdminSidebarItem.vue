@@ -37,13 +37,6 @@ const route = useRoute()
                 <span>概览</span>
             </el-menu-item>
 
-            <el-sub-menu index="/admin/announce" disabled>
-                <template #title>
-                    <el-icon><Document /></el-icon>
-                    <span>公告管理</span>
-                </template>
-            </el-sub-menu>
-
             <el-sub-menu index="/admin/problem">
                 <template #title>
                     <el-icon><Files /></el-icon>
@@ -61,12 +54,29 @@ const route = useRoute()
                 </el-menu-item>
             </el-sub-menu>
 
+            <el-sub-menu index="/admin/contest">
+                <template #title>
+                    <el-icon><Menu /></el-icon>
+                    <span>比赛管理</span>
+                </template>
+                <el-menu-item index="/admin/contests">
+                    <template #title>
+                        <el-icon><List /></el-icon>
+                        <span>比赛列表</span>
+                    </template>
+                </el-menu-item>
+                <el-menu-item index="/admin/contest/create">
+                    <el-icon><Notebook /></el-icon>
+                    <span>新建比赛</span>
+                </el-menu-item>
+            </el-sub-menu>
+
             <el-menu-item index="/admin/submissions" disabled>
                 <el-icon><Trophy /></el-icon>
                 <span>提交记录</span>
             </el-menu-item>
 
-            <el-menu-item index="/admin/users" disabled>
+            <el-menu-item index="/admin/users">
                 <el-icon><UserFilled /></el-icon>
                 <span>账号管理</span>
             </el-menu-item>

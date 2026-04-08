@@ -18,6 +18,22 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     const userStore = useUserStore();
 
+    // 全局同步用户信息（刷新页面后重新拉取状态）
+    if (userStore.isLoggedIn && userStore.adminRole === null) {
+        try {
+            await userStore.checkAdminAccess();
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '';
+            if (errorMessage.includes('401') || errorMessage.includes('403')) {
+                userStore.logout();
+                if (to.path !== '/login') {
+                    ElNotification({type: 'error', message: '认证已失效，请重新登录'});
+                    return '/login';
+                }
+            }
+        }
+    }
+
     const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
 
     if (!requiresAdmin) {
@@ -29,23 +45,13 @@ router.beforeEach(async (to) => {
         return '/login';
     }
 
-    try {
-        const allowAdmin = await userStore.checkAdminAccess();
-        if (!allowAdmin) {
-            ElNotification({type: 'error', message: '无后台访问权限'});
-            return '/home';
-        }
-        return true;
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '权限校验失败，请稍后重试';
-        if (errorMessage.includes('401') || errorMessage.includes('403')) {
-            userStore.logout();
-            ElNotification({type: 'error', message: '登录已失效，请重新登录'});
-            return '/login';
-        }
-        ElNotification({type: 'error', message: '权限校验失败，请稍后重试'});
+    // 这里已经全局获取过状态了，如果 isAdmin 为 false 则拦截
+    if (!userStore.isAdmin) {
+        ElNotification({type: 'error', message: '无后台访问权限'});
         return '/home';
     }
+    
+    return true;
 });
 
 export default router;

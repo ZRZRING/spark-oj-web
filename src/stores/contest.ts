@@ -97,6 +97,30 @@ export interface rankingItem {
 
 export interface getContestRankingRes extends response<{ ranking: rankingItem[] }> {}
 
+export interface createContestReq {
+    title: string;
+    password?: string;
+    problems?: number[];
+    description?: string;
+    practice?: boolean;
+    startTime?: string;
+    endTime?: string;
+    createBy: string;
+    lockTime?: string;
+}
+
+export interface updateContestReq {
+    title: string;
+    password?: string;
+    problems?: number[];
+    description?: string;
+    timeRequired?: boolean;
+    startTime?: string;
+    endTime?: string;
+    createBy: string;
+    lockTime?: string;
+}
+
 export const useContestStore = defineStore("contest", () => {
     const getContests = async (req: getContestsReq): Promise<getContestsData> => {
         const res = await service.get<getContestsReq, getContestsRes>("/contests", { params: req });
@@ -132,6 +156,14 @@ export const useContestStore = defineStore("contest", () => {
         return res.data?.ranking ?? [];
     };
 
+    const createContest = async (req: createContestReq): Promise<void> => {
+        await service.post<createContestReq, response<void>>("/contest", req);
+    };
+
+    const updateContest = async (contestId: string, req: updateContestReq): Promise<void> => {
+        await service.put<updateContestReq, response<void>>(`/contest/${contestId}`, req);
+    };
+
     return {
         getContests,
         getContestDetail,
@@ -139,5 +171,7 @@ export const useContestStore = defineStore("contest", () => {
         getContestSubmissions,
         getContestProblemInfo,
         getContestRanking,
+        createContest,
+        updateContest,
     };
 });

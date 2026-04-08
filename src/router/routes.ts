@@ -94,6 +94,26 @@ export const constantRoute: RouteRecordRaw[] = [
                 name: "adminEditProblem",
                 component: () => import("@/views/admin/CreateProblemView.vue"),
             },
+            {
+                path: "users",
+                name: "adminUsers",
+                component: () => import("@/views/admin/UserListView.vue"),
+            },
+            {
+                path: "contests",
+                name: "adminContests",
+                component: () => import("@/views/admin/ContestListView.vue"),
+            },
+            {
+                path: "contest/create",
+                name: "adminCreateContest",
+                component: () => import("@/views/admin/CreateContestView.vue"),
+            },
+            {
+                path: "contest/:contestId/edit",
+                name: "adminEditContest",
+                component: () => import("@/views/admin/CreateContestView.vue"),
+            },
         ],
     },
     {
