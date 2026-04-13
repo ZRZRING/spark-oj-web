@@ -60,8 +60,8 @@ export interface getAdminProtectedRes extends response<getAdminProtectedData> {
 
 export interface userItem {
     username: string;
-    user_role: string;
-    create_time: string;
+    userRole: string;
+    createTime: string;
     rating: string;
 }
 

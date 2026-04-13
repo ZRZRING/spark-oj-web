@@ -103,13 +103,13 @@ const handleDelete = (username: string) => {
             <el-table-column prop="rating" label="Rating分数" width="120" />
             <el-table-column label="创建时间" min-width="180">
                 <template #default="{ row }">
-                    {{ row.create_time }}
+                    {{ row.createTime }}
                 </template>
             </el-table-column>
             <el-table-column label="角色" width="120" align="center">
                 <template #default="{ row }">
-                    <el-tag :type="row.user_role === 'admin' ? 'danger' : 'info'">
-                        {{ row.user_role === 'admin' ? '管理员' : '普通用户' }}
+                    <el-tag :type="row.userRole === 'admin' ? 'danger' : 'info'">
+                        {{ row.userRole === 'admin' ? '管理员' : '普通用户' }}
                     </el-tag>
                 </template>
             </el-table-column>
