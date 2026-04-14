@@ -49,16 +49,50 @@ const handlePageSizeSelect = (value: string | number) => {
     handleSizeChange(Number(value))
 }
 
-const handleEdit = (username: string) => {
-    ElNotification({ type: 'warning', message: `编辑用户 ${username} 功能暂未开放` })
+const handleRoleChange = async (row: userItem, newRole: string) => {
+    try {
+        await userStore.updateRole({ username: row.username, role: newRole })
+        ElNotification({ type: 'success', message: `用户 ${row.username} 角色修改成功` })
+    } catch (e: any) {
+        ElNotification({ type: 'error', message: `用户 ${row.username} 角色修改失败` })
+    }
 }
 
-const handleDelete = (username: string) => {
-    ElMessageBox.confirm('确定要删除该用户吗？', '警告', {
-        type: 'warning'
-    }).then(() => {
-        ElNotification({ type: 'warning', message: `删除用户 ${username} 功能暂未开放` })
-    }).catch(() => {})
+const handleBatchRoleChange = async (newRole: string) => {
+    if (selectedRows.value.length === 0) {
+        ElNotification({ type: 'warning', message: '请先选择用户' })
+        return
+    }
+    
+    try {
+        await ElMessageBox.confirm(`确定要将选中的 ${selectedRows.value.length} 个用户修改为该角色吗？`, '批量修改', {
+            type: 'warning'
+        })
+    } catch {
+        return
+    }
+
+    let successCount = 0
+    let failCount = 0
+
+    const promises = selectedRows.value.map(row => 
+        userStore.updateRole({ username: row.username, role: newRole })
+            .then(() => {
+                row.userRole = newRole
+                successCount++
+            })
+            .catch(() => {
+                failCount++
+            })
+    )
+
+    await Promise.all(promises)
+
+    if (failCount === 0) {
+        ElNotification({ type: 'success', message: `批量修改成功，共 ${successCount} 个用户` })
+    } else {
+        ElNotification({ type: 'warning', message: `批量修改完成，成功 ${successCount} 个，失败 ${failCount} 个` })
+    }
 }
 </script>
 
@@ -71,6 +105,19 @@ const handleDelete = (username: string) => {
                 </el-col>
                 <el-col :xs="24" :sm="14">
                     <el-space wrap alignment="center" style="width: 100%; justify-content: flex-end;">
+                        <el-dropdown @command="handleBatchRoleChange">
+                            <el-button type="primary" :disabled="selectedRows.length === 0">
+                                批量修改角色
+                            </el-button>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item command="root">设为 站长 (root)</el-dropdown-item>
+                                    <el-dropdown-item command="admin">设为 管理员 (admin)</el-dropdown-item>
+                                    <el-dropdown-item command="user">设为 普通用户 (user)</el-dropdown-item>
+                                    <el-dropdown-item command="locked">设为 封禁用户 (locked)</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
                         <el-input
                             v-model="keyword"
                             clearable
@@ -106,19 +153,19 @@ const handleDelete = (username: string) => {
                     {{ row.createTime }}
                 </template>
             </el-table-column>
-            <el-table-column label="角色" width="120" align="center">
+            <el-table-column label="角色" width="160" align="center">
                 <template #default="{ row }">
-                    <el-tag :type="row.userRole === 'admin' ? 'danger' : 'info'">
-                        {{ row.userRole === 'admin' ? '管理员' : '普通用户' }}
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" width="180">
-                <template #default="{ row }">
-                    <el-space :size="6" wrap>
-                        <el-button type="primary" link @click="handleEdit(row.username)">编辑</el-button>
-                        <el-button type="danger" link @click="handleDelete(row.username)">删除</el-button>
-                    </el-space>
+                    <el-select
+                        v-model="row.userRole"
+                        @change="handleRoleChange(row, $event)"
+                        size="small"
+                        style="width: 100%;"
+                    >
+                        <el-option label="站长 (root)" value="root" />
+                        <el-option label="管理员 (admin)" value="admin" />
+                        <el-option label="普通用户 (user)" value="user" />
+                        <el-option label="封禁 (locked)" value="locked" />
+                    </el-select>
                 </template>
             </el-table-column>
         </el-table>

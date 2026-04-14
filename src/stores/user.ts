@@ -76,6 +76,13 @@ export interface getUsersData extends pageInfoRes {
 export interface getUsersRes extends response<getUsersData> {
 }
 
+export interface updateRoleReq {
+    username: string;
+    role: string;
+}
+
+export interface updateRoleRes extends response {
+}
 
 export const useUserStore = defineStore("user", () => {
     const token = ref(localStorage.getItem("token"));
@@ -127,7 +134,12 @@ export const useUserStore = defineStore("user", () => {
     const getUsers = async (req: getUsersReq): Promise<getUsersData> => {
         const res = await service.get<getUsersReq, getUsersRes>("/users", { params: req });
         return res.data!;
+    }
+    
+    const updateRole = async (req: updateRoleReq) => {
+        const res = await service.put<updateRoleReq, updateRoleRes>("/users/role", req);
+        return res;
     };
 
-    return {token, username, adminRole, isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess, getUsers};
+    return {token, username, adminRole, isLoggedIn, isAdmin, login, logout, register, getProfile, checkAdminAccess, getUsers, updateRole};
 });
