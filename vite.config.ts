@@ -18,10 +18,10 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         },
     },
-    server: {
-        sourcemapIgnoreList: false,
-        proxy: {
-            '/api': 'http://127.0.0.1:8000'
-        }
-    }
+    // server: {
+    //     sourcemapIgnoreList: false,
+    //     proxy: {
+    //         '/api': 'http://127.0.0.1:8000'
+    //     }
+    // }
 })
