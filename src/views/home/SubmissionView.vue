@@ -3,6 +3,7 @@ import {computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {type submissionDetail, useSubmissionStore} from '@/stores/submission.ts'
 import HighlightCode from '@/components/HighlightCode.vue'
+import AiChatCard from '@/components/AiChatCard.vue'
 
 const route = useRoute()
 const submissionStore = useSubmissionStore()
@@ -115,6 +116,8 @@ onBeforeUnmount(() => {
             <el-card shadow="never" class="code-card">
                 <HighlightCode :code="submission.code" :language="submission.language"/>
             </el-card>
+
+            <AiChatCard v-if="!isPending" :submission="submission" />
         </template>
     </div>
 </template>
