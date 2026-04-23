@@ -106,18 +106,16 @@ const handleSubmit = async (code: string, language: string) => {
 
     submitLoading.value = true
     try {
-        await coreStore.submitCode({
+        const result = await coreStore.submitCode({
             code,
             username: userStore.username!,
             problemId: problemId.value,
             language,
             ...(isInContest.value && {contestId: contestId.value}),
         })
-        ElMessage.success('提交成功')
+        ElMessage.success('提交成功，正在评测...')
         codeSubmitCardRef.value?.clearCode()
-        if (isInContest.value) {
-            router.push(`/contest/${contestId.value}/submissions`)
-        }
+        router.push(`/submission/${result.submissionId}`)
     } catch (error) {
         ElMessage.error(error instanceof Error ? error.message : '提交失败')
     } finally {

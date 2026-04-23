@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { pageInfoReq } from '@/stores/type'
 import { useRouter } from 'vue-router'
-import { ElNotification } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { type getProblemsData, type problem, useProblemStore } from '@/stores/problem.ts'
-import type { TableInstance } from 'element-plus'
+import type { TableInstance, UploadFile, UploadRawFile } from 'element-plus'
 
 const router = useRouter()
 const problemStore = useProblemStore()
@@ -62,8 +62,51 @@ const handleEdit = (problemId: string) => {
     router.push(`/admin/problem/${problemId}/edit`)
 }
 
+const testcaseDialogVisible = ref(false)
+const testcaseProblemId = ref('')
+const testcaseFiles = ref<UploadFile[]>([])
+const testcaseUploading = ref(false)
+
 const handleTestData = (problemId: string) => {
-    ElNotification({ type: 'warning', message: `测试数据管理 ${problemId} 功能暂未开放` })
+    testcaseProblemId.value = problemId
+    testcaseFiles.value = []
+    testcaseDialogVisible.value = true
+}
+
+const handleExceed = () => {
+    ElMessage.warning('最多上传 50 个文件')
+}
+
+const beforeUpload = (file: UploadRawFile) => {
+    const validExt = file.name.endsWith('.in') || file.name.endsWith('.out')
+    if (!validExt) {
+        ElMessage.error('仅支持 .in 和 .out 文件')
+        return false
+    }
+    return true
+}
+
+const handleUploadTestcases = async () => {
+    const validFiles = testcaseFiles.value
+        .filter(f => f.status !== 'ready' || f.raw)
+        .map(f => f.raw!)
+        .filter(Boolean)
+
+    if (validFiles.length === 0) {
+        ElMessage.warning('请选择测试数据文件')
+        return
+    }
+
+    testcaseUploading.value = true
+    try {
+        await problemStore.uploadTestcases(testcaseProblemId.value, validFiles)
+        ElMessage.success('测试数据上传成功')
+        testcaseDialogVisible.value = false
+    } catch (error) {
+        ElMessage.error(error instanceof Error ? error.message : '上传失败')
+    } finally {
+        testcaseUploading.value = false
+    }
 }
 
 const handleDelete = (problemId: string) => {
@@ -193,6 +236,39 @@ const handleVisibleSwitchChange = (problemId: string, value: string | number | b
             class="bottom-pagination"
         />
     </el-card>
+
+    <el-dialog
+        v-model="testcaseDialogVisible"
+        :title="`上传测试数据 - 题目 ${testcaseProblemId}`"
+        width="560px"
+        :close-on-click-modal="false"
+    >
+        <el-upload
+            v-model:file-list="testcaseFiles"
+            :auto-upload="false"
+            :limit="50"
+            :before-upload="beforeUpload"
+            :on-exceed="handleExceed"
+            multiple
+            drag
+        >
+            <el-icon style="font-size: 40px; color: #c0c4cc; margin-bottom: 8px;">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M480 480V128a32 32 0 0 1 64 0v352h352a32 32 0 1 1 0 64H544v352a32 32 0 1 1-64 0V544H128a32 32 0 0 1 0-64h352z"/></svg>
+            </el-icon>
+            <div>将 .in / .out 文件拖到此处，或<em>点击上传</em></div>
+            <template #tip>
+                <div class="el-upload__tip">
+                    请上传成对的 .in 和 .out 文件，如 1.in / 1.out, 2.in / 2.out
+                </div>
+            </template>
+        </el-upload>
+        <template #footer>
+            <el-button @click="testcaseDialogVisible = false">取消</el-button>
+            <el-button type="primary" :loading="testcaseUploading" @click="handleUploadTestcases">
+                上传
+            </el-button>
+        </template>
+    </el-dialog>
 </template>
 
 <style scoped>

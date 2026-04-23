@@ -1,5 +1,6 @@
-// 判题结果状态枚举
 export enum JudgeResultStatus {
+    Waiting = "Waiting",
+    Running = "Running",
     Accepted = "Accepted",
     WrongAnswer = "Wrong Answer",
     TimeLimitExceeded = "Time Limit Exceeded",
@@ -9,6 +10,8 @@ export enum JudgeResultStatus {
 }
 
 export const JUDGE_RESULT_OPTIONS = [
+    { label: "Waiting", value: JudgeResultStatus.Waiting },
+    { label: "Running", value: JudgeResultStatus.Running },
     { label: "Accepted", value: JudgeResultStatus.Accepted },
     { label: "Wrong Answer", value: JudgeResultStatus.WrongAnswer },
     { label: "Time Limit Exceeded", value: JudgeResultStatus.TimeLimitExceeded },

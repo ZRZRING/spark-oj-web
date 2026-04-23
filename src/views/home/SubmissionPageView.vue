@@ -60,12 +60,14 @@ const handleReset = (): void => {
 }
 
 const getResultType = (result: string): '' | 'success' | 'danger' | 'warning' | 'info' => {
+    if (result === 'Waiting') return 'info'
+    if (result === 'Running') return ''
     if (result === 'Accepted') return 'success'
     if (result === 'Wrong Answer') return 'danger'
     if (result === 'Time Limit Exceeded') return 'warning'
     if (result === 'Memory Limit Exceeded') return 'warning'
     if (result === 'Runtime Error') return 'danger'
-    if (result === 'Compilation Error') return 'info'
+    if (result === 'Compile Error') return 'info'
     return ''
 }
 </script>

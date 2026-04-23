@@ -65,5 +65,15 @@ export const useProblemStore = defineStore("problem", () => {
         return res.data!;
     };
 
-    return { getProblems, getProblemDetail, createProblem, updateProblem };
+    const uploadTestcases = async (problemId: string, files: File[]) => {
+        const formData = new FormData()
+        files.forEach(file => formData.append('test_cases', file))
+        formData.append('problem_id', problemId)
+        const res = await service.post<null, response<{ path: string }>>("/upload/testcases", formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        return res.data!
+    }
+
+    return { getProblems, getProblemDetail, createProblem, updateProblem, uploadTestcases };
 });
