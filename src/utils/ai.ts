@@ -1,12 +1,60 @@
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
-const STORAGE_KEY = 'deepseek_api_key'
-
-export function getApiKey(): string {
-    return localStorage.getItem(STORAGE_KEY) || ''
+export interface AiProvider {
+    id: string
+    name: string
+    apiUrl: string
+    models: string[]
+    storageKey: string
 }
 
-export function setApiKey(key: string) {
-    localStorage.setItem(STORAGE_KEY, key)
+export const PROVIDERS: AiProvider[] = [
+    {
+        id: 'qwen',
+        name: 'Qwen',
+        apiUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+        models: ['qwen3.6-flash', 'qwen3.6-plus', 'qwen3.6-max', 'qwen3.6-coder-plus'],
+        storageKey: 'ai_key_qwen',
+    },
+    {
+        id: 'deepseek',
+        name: 'DeepSeek',
+        apiUrl: 'https://api.deepseek.com/chat/completions',
+        models: ['deepseek-v4-flash', 'deepseek-v4-pro'],
+        storageKey: 'ai_key_deepseek',
+    },
+]
+
+const SELECTED_PROVIDER_KEY = 'ai_selected_provider'
+const SELECTED_MODEL_KEY = 'ai_selected_model'
+
+export function getSelectedProviderId(): string {
+    return localStorage.getItem(SELECTED_PROVIDER_KEY) || PROVIDERS[0].id
+}
+
+export function setSelectedProviderId(id: string) {
+    localStorage.setItem(SELECTED_PROVIDER_KEY, id)
+}
+
+export function getSelectedModel(): string {
+    return localStorage.getItem(SELECTED_MODEL_KEY) || PROVIDERS[0].models[0]
+}
+
+export function setSelectedModel(model: string) {
+    localStorage.setItem(SELECTED_MODEL_KEY, model)
+}
+
+export function getProvider(id?: string): AiProvider {
+    const pid = id || getSelectedProviderId()
+    return PROVIDERS.find((p) => p.id === pid) || PROVIDERS[0]
+}
+
+export function getApiKey(providerId?: string): string {
+    const provider = getProvider(providerId)
+    return localStorage.getItem(provider.storageKey) || ''
+}
+
+export function setApiKey(key: string, providerId?: string) {
+    const provider = getProvider(providerId)
+    localStorage.setItem(provider.storageKey, key)
 }
 
 export function hasApiKey(): boolean {
@@ -51,21 +99,23 @@ export async function streamChat(
     onError: (err: Error) => void,
     signal?: AbortSignal,
 ) {
+    const provider = getProvider()
+    const model = getSelectedModel()
     const apiKey = getApiKey()
     if (!apiKey) {
-        onError(new Error('请先设置 DeepSeek API Key'))
+        onError(new Error(`请先设置 ${provider.name} API Key`))
         return
     }
 
     try {
-        const res = await fetch(DEEPSEEK_API_URL, {
+        const res = await fetch(provider.apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: 'deepseek-chat',
+                model,
                 messages,
                 stream: true,
             }),

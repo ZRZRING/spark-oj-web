@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { Setting, User } from '@element-plus/icons-vue'
-import { type ChatMessage, buildSystemPrompt, hasApiKey, streamChat } from '@/utils/ai.ts'
+import { type ChatMessage, buildSystemPrompt, getProvider, getSelectedModel, hasApiKey, streamChat } from '@/utils/ai.ts'
 import { useProblemStore } from '@/stores/problem.ts'
 import type { submissionDetail } from '@/stores/submission.ts'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
@@ -27,6 +27,8 @@ const abortController = ref<AbortController | null>(null)
 
 const problemContent = ref('')
 const problemFetched = ref(false)
+const currentProvider = ref(getProvider())
+const currentModel = ref(getSelectedModel())
 
 const presetQuestions = computed(() => {
     const result = props.submission.result
@@ -164,7 +166,7 @@ onBeforeUnmount(() => {
     <el-card shadow="never" class="ai-chat-card">
         <template #header>
             <div class="card-header">
-                <span class="header-title">AI 答疑助手</span>
+                <span class="header-title">AI 答疑助手 · {{ currentModel }}</span>
                 <el-space :size="8">
                     <el-button text size="small" @click="clearChat" :disabled="messages.length === 0">
                         清空对话
@@ -202,7 +204,7 @@ onBeforeUnmount(() => {
                         </el-avatar>
                     </div>
                     <div class="msg-body">
-                        <MarkdownRenderer :content="msg.content" :allow-latex="false" />
+                        <MarkdownRenderer :content="msg.content" />
                     </div>
                 </div>
                 <div v-if="streamingContent" class="chat-message msg-assistant">
@@ -210,7 +212,7 @@ onBeforeUnmount(() => {
                         <el-avatar :size="28" style="background-color: var(--el-color-primary)">AI</el-avatar>
                     </div>
                     <div class="msg-body">
-                        <MarkdownRenderer :content="streamingContent" :allow-latex="false" />
+                        <MarkdownRenderer :content="streamingContent" />
                         <span class="cursor-blink">▌</span>
                     </div>
                 </div>
@@ -235,7 +237,7 @@ onBeforeUnmount(() => {
             </el-input>
         </div>
 
-        <AiSettingsDialog v-model="showSettings" />
+        <AiSettingsDialog v-model="showSettings" @update:model-value="(v: boolean) => { if (!v) { currentProvider = getProvider(); currentModel = getSelectedModel() } }" />
     </el-card>
 </template>
 
