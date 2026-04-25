@@ -46,6 +46,9 @@ onBeforeUnmount(() => {
         <el-breadcrumb separator="/">
             <el-breadcrumb-item id="version">Version: 0.1.0</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-breadcrumb separator="/">
+            <el-link href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" :underline="false">鲁ICP备2025166391号</el-link>
+        </el-breadcrumb>
     </div>
 </template>
 
