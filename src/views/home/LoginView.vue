@@ -7,7 +7,8 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { TEXT } from '@/config/zh-cn.ts'
 import { Notify } from "@/utils/notify.ts";
-import { type loginReq, useUserStore } from "@/stores/user.ts";
+import { type loginReq } from "@/api/user.ts";
+import { useUserStore } from "@/stores/user.ts";
 import { MAX_PASSWORD, MAX_USERNAME, MIN_PASSWORD, MIN_USERNAME } from "@/utils/consts.ts";
 
 const router = useRouter();

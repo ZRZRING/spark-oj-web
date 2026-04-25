@@ -5,12 +5,11 @@ import {
     type getSubmissionsData,
     type getSubmissionsReq,
     type submission,
-    useSubmissionStore
-} from "@/stores/submission.ts";
+    getSubmissions
+} from "@/api/submission.ts";
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const submissionStore = useSubmissionStore();
 const router = useRouter()
 
 const {
@@ -22,7 +21,7 @@ const {
     handleCurrentChange,
 } = usePagedList<getSubmissionsReq, getSubmissionsData, submission>({
     initialRequest: { page: 1, size: 50 },
-    fetcher: (request) => submissionStore.getSubmissions(request),
+    fetcher: (request) => getSubmissions(request),
     selectItems: (data) => data.submissions,
     selectTotal: (data) => data.total,
 })

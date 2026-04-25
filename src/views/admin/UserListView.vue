@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import type { pageInfoReq } from '@/stores/type'
+import type { pageInfoReq } from '@/api/type'
 import { useRouter } from 'vue-router'
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
-import { type getUsersData, type userItem, useUserStore } from '@/stores/user.ts'
+import { type getUsersData, type userItem, getUsers, updateRole } from '@/api/user.ts'
 import type { TableInstance } from 'element-plus'
 
 const router = useRouter()
-const userStore = useUserStore()
 
 const {
     request: pageInfo,
@@ -22,7 +21,7 @@ const {
         page: 1,
         size: 50,
     },
-    fetcher: (request) => userStore.getUsers(request),
+    fetcher: (request) => getUsers(request),
     selectItems: (data) => data.users,
     selectTotal: (data) => data.total,
 })
@@ -51,7 +50,7 @@ const handlePageSizeSelect = (value: string | number) => {
 
 const handleRoleChange = async (row: userItem, newRole: string) => {
     try {
-        await userStore.updateRole({ username: row.username, role: newRole })
+        await updateRole({ username: row.username, role: newRole })
         ElNotification({ type: 'success', message: `用户 ${row.username} 角色修改成功` })
     } catch (e: any) {
         ElNotification({ type: 'error', message: `用户 ${row.username} 角色修改失败` })
@@ -76,7 +75,7 @@ const handleBatchRoleChange = async (newRole: string) => {
     let failCount = 0
 
     const promises = selectedRows.value.map(row => 
-        userStore.updateRole({ username: row.username, role: newRole })
+        updateRole({ username: row.username, role: newRole })
             .then(() => {
                 row.userRole = newRole
                 successCount++

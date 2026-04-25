@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { type contestDetail, type contestProblem, useContestStore } from '@/stores/contest.ts'
+import { type contestDetail, type contestProblem, getContestProblems } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 
 const props = defineProps<{ contest: contestDetail | null }>()
 
 const route = useRoute()
-const contestStore = useContestStore()
 const router = useRouter()
 
 const contestId = computed(() => String(route.params.contestId ?? ''))
@@ -22,7 +21,7 @@ const loadProblems = async (contestId: string) => {
     if (!contestId) return
     loading.value = true
     try {
-        const data = await contestStore.getContestProblems(contestId)
+        const data = await getContestProblems(contestId)
         problems.value = data.problems ?? []
     } catch {
         Notify.error('获取比赛题目列表失败')

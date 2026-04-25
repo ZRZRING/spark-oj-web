@@ -3,9 +3,8 @@ import { RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {type getProblemsData, type getProblemsReq, type problem, useProblemStore} from "@/stores/problem.ts";
+import {type getProblemsData, type getProblemsReq, type problem, getProblems} from "@/api/problem.ts";
 
-const problemStore = useProblemStore()
 const router = useRouter()
 
 const {
@@ -20,7 +19,7 @@ const {
         page: 1,
         size: 50,
     },
-    fetcher: (req) => problemStore.getProblems(req),
+    fetcher: (req) => getProblems(req),
     selectItems: (data) => data.problems,
     selectTotal: (data) => data.total,
 })

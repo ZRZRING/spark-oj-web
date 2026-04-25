@@ -2,16 +2,14 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { Setting, User } from '@element-plus/icons-vue'
 import { type ChatMessage, buildSystemPrompt, getProvider, getSelectedModel, hasApiKey, streamChat } from '@/utils/ai.ts'
-import { useProblemStore } from '@/stores/problem.ts'
-import type { submissionDetail } from '@/stores/submission.ts'
+import { getProblemDetail } from '@/api/problem.ts'
+import type { submissionDetail } from '@/api/submission.ts'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import AiSettingsDialog from '@/components/AiSettingsDialog.vue'
 
 const props = defineProps<{
     submission: submissionDetail
 }>()
-
-const problemStore = useProblemStore()
 
 interface DisplayMessage {
     role: 'user' | 'assistant'
@@ -67,7 +65,7 @@ const systemPrompt = computed(() =>
 const fetchProblem = async () => {
     if (problemFetched.value) return
     try {
-        const detail = await problemStore.getProblemDetail({ problemId: props.submission.problemId })
+        const detail = await getProblemDetail({ problemId: props.submission.problemId })
         problemContent.value = detail.content
     } catch {
         problemContent.value = ''

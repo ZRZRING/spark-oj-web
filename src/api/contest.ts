@@ -1,6 +1,5 @@
-import { defineStore } from "pinia";
 import service from "@/utils/service.ts";
-import type { pageInfoReq, pageInfoRes, response } from "@/stores/type.ts";
+import type { pageInfoReq, pageInfoRes, response } from "@/api/type.ts";
 
 export interface contest {
     contestId: string;
@@ -81,7 +80,6 @@ export interface getContestSubmissionsRes extends response<getContestSubmissions
 
 export interface getContestProblemInfoRes extends response<contestProblemDetail> {}
 
-// 排行榜相关类型
 export interface problemStatsItem {
     status: string;
     rejectCount: number;
@@ -121,57 +119,44 @@ export interface updateContestReq {
     lockTime?: string;
 }
 
-export const useContestStore = defineStore("contest", () => {
-    const getContests = async (req: getContestsReq): Promise<getContestsData> => {
-        const res = await service.get<getContestsReq, getContestsRes>("/contests", { params: req });
-        return res.data!;
-    };
+export const getContests = async (req: getContestsReq): Promise<getContestsData> => {
+    const res = await service.get<getContestsReq, getContestsRes>("/contests", { params: req });
+    return res.data!;
+};
 
-    const getContestDetail = async (contestId: string): Promise<contestDetail> => {
-        const res = await service.get<void, getContestDetailRes>(`/contest/${contestId}`);
-        return res.data!;
-    };
+export const getContestDetail = async (contestId: string): Promise<contestDetail> => {
+    const res = await service.get<void, getContestDetailRes>(`/contest/${contestId}`);
+    return res.data!;
+};
 
-    const getContestProblems = async (contestId: string): Promise<getContestProblemsData> => {
-        const res = await service.get<void, getContestProblemsRes>(`/contest/${contestId}/problems`);
-        return res.data!;
-    };
+export const getContestProblems = async (contestId: string): Promise<getContestProblemsData> => {
+    const res = await service.get<void, getContestProblemsRes>(`/contest/${contestId}/problems`);
+    return res.data!;
+};
 
-    const getContestSubmissions = async (req: getContestSubmissionsReq): Promise<getContestSubmissionsData> => {
-        const { contestId, ...params } = req;
-        const res = await service.get<getContestSubmissionsReq, getContestSubmissionsRes>(
-            `/contest/${contestId}/submissions`,
-            { params },
-        );
-        return res.data!;
-    };
+export const getContestSubmissions = async (req: getContestSubmissionsReq): Promise<getContestSubmissionsData> => {
+    const { contestId, ...params } = req;
+    const res = await service.get<getContestSubmissionsReq, getContestSubmissionsRes>(
+        `/contest/${contestId}/submissions`,
+        { params },
+    );
+    return res.data!;
+};
 
-    const getContestProblemInfo = async (contestId: string, problemId: string): Promise<contestProblemDetail> => {
-        const res = await service.get<void, getContestProblemInfoRes>(`/contest/${contestId}/problem/${problemId}`);
-        return res.data!;
-    };
+export const getContestProblemInfo = async (contestId: string, problemId: string): Promise<contestProblemDetail> => {
+    const res = await service.get<void, getContestProblemInfoRes>(`/contest/${contestId}/problem/${problemId}`);
+    return res.data!;
+};
 
-    const getContestRanking = async (contestId: string): Promise<rankingItem[]> => {
-        const res = await service.get<void, getContestRankingRes>(`/contest/${contestId}/ranking`);
-        return res.data?.ranking ?? [];
-    };
+export const getContestRanking = async (contestId: string): Promise<rankingItem[]> => {
+    const res = await service.get<void, getContestRankingRes>(`/contest/${contestId}/ranking`);
+    return res.data?.ranking ?? [];
+};
 
-    const createContest = async (req: createContestReq): Promise<void> => {
-        await service.post<createContestReq, response<void>>("/contest", req);
-    };
+export const createContest = async (req: createContestReq): Promise<void> => {
+    await service.post<createContestReq, response<void>>("/contest", req);
+};
 
-    const updateContest = async (contestId: string, req: updateContestReq): Promise<void> => {
-        await service.put<updateContestReq, response<void>>(`/contest/${contestId}`, req);
-    };
-
-    return {
-        getContests,
-        getContestDetail,
-        getContestProblems,
-        getContestSubmissions,
-        getContestProblemInfo,
-        getContestRanking,
-        createContest,
-        updateContest,
-    };
-});
+export const updateContest = async (contestId: string, req: updateContestReq): Promise<void> => {
+    await service.put<updateContestReq, response<void>>(`/contest/${contestId}`, req);
+};

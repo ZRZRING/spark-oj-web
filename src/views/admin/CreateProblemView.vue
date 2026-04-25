@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CodeEditor from '@/components/CodeEditor.vue'
-import { useProblemStore } from '@/stores/problem'
+import { getProblemDetail, createProblem, updateProblem } from '@/api/problem'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import { ref, computed, onMounted } from 'vue'
@@ -9,7 +9,6 @@ import { JUDGE_TYPE_OPTIONS } from "@/utils/enum.ts";
 
 const router = useRouter()
 const route = useRoute()
-const problemStore = useProblemStore()
 const userStore = useUserStore()
 
 const problem = ref({
@@ -35,7 +34,7 @@ const loadProblemDetail = async () => {
     const problemId = route.params.problemId as string
     initLoading.value = true
     try {
-        const data = await problemStore.getProblemDetail({ problemId })
+        const data = await getProblemDetail({ problemId })
         problem.value = {
             problemId: data.problemId,
             title: data.title,
@@ -70,7 +69,7 @@ const handleSubmit = async () => {
     loading.value = true
     try {
         if (isEditMode.value) {
-            await problemStore.updateProblem({
+            await updateProblem({
                 problemId: problem.value.problemId,
                 title: problem.value.title,
                 judgeType: problem.value.judgeType,
@@ -81,7 +80,7 @@ const handleSubmit = async () => {
             })
             ElMessage.success('题目更新成功')
         } else {
-            await problemStore.createProblem({
+            await createProblem({
                 title: problem.value.title,
                 judgeType: problem.value.judgeType,
                 timeLimit: Number(problem.value.timeLimit),

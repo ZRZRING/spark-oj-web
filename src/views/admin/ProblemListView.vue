@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import type { pageInfoReq } from '@/stores/type'
+import type { pageInfoReq } from '@/api/type'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElNotification } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
-import { type getProblemsData, type problem, useProblemStore } from '@/stores/problem.ts'
+import { type getProblemsData, type problem, getProblems, uploadTestcases } from '@/api/problem.ts'
 import type { TableInstance, UploadFile, UploadRawFile } from 'element-plus'
 
 const router = useRouter()
-const problemStore = useProblemStore()
 
 const {
     request: pageInfo,
@@ -22,7 +21,7 @@ const {
         page: 1,
         size: 50,
     },
-    fetcher: (request) => problemStore.getProblems(request),
+    fetcher: (request) => getProblems(request),
     selectItems: (data) => data.problems,
     selectTotal: (data) => data.total,
 })
@@ -99,7 +98,7 @@ const handleUploadTestcases = async () => {
 
     testcaseUploading.value = true
     try {
-        await problemStore.uploadTestcases(testcaseProblemId.value, validFiles)
+        await uploadTestcases(testcaseProblemId.value, validFiles)
         ElMessage.success('测试数据上传成功')
         testcaseDialogVisible.value = false
     } catch (error) {

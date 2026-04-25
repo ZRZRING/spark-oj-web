@@ -4,9 +4,8 @@ import { Calendar, Clock, Lock, Search, Trophy } from '@element-plus/icons-vue'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {type contest, type getContestsData, type getContestsReq, useContestStore} from "@/stores/contest.ts";
+import {type contest, type getContestsData, type getContestsReq, getContests} from "@/api/contest.ts";
 
-const contestStore = useContestStore()
 const router = useRouter()
 
 const {
@@ -21,7 +20,7 @@ const {
         page: 1,
         size: 50,
     },
-    fetcher: (request) => contestStore.getContests(request),
+    fetcher: (request) => getContests(request),
     selectItems: (data) => data.contests,
     selectTotal: (data) => data.total,
 })

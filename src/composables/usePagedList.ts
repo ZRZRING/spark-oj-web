@@ -1,5 +1,5 @@
 import {onMounted, ref, toValue, watch, type MaybeRefOrGetter, type Ref} from 'vue';
-import type {pageInfoReq} from '@/stores/type';
+import type {pageInfoReq} from '@/api/type';
 
 interface UsePagedListOptions<TRequest extends pageInfoReq, TData, TItem> {
     initialRequest: MaybeRefOrGetter<TRequest>;

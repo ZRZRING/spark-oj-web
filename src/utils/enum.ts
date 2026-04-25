@@ -54,27 +54,11 @@ export const JUDGE_TYPE_OPTIONS = [
     { label: "Unknown", value: JudgeType.Unknown },
 ]
 
-// 获取判题结果标签
-export function getJudgeResultLabel(status: string): string {
-    return status
-}
-
-// 获取判题类型标签
-export function getJudgeTypeLabel(type: string): string {
-    return type
-}
-
 // 排行榜题目状态枚举
 export enum RankingProblemStatus {
     NotTried = "",           // 未尝试 (空字符串)
     Accepted = "Accepted",   // 已通过
     Reject = "Reject",       // 尝试但未通过
-}
-
-// 获取语言标签
-export function getLanguageLabel(lang: string): string {
-    const option = LANGUAGE_OPTIONS.find(opt => opt.value === lang)
-    return option?.label ?? lang
 }
 
 // 获取排行榜题目状态样式

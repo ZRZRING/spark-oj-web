@@ -4,16 +4,14 @@ import { useRoute, useRouter } from 'vue-router'
 import {
     type contestDetail,
     type contestSubmission,
-    useContestStore
-} from '@/stores/contest.ts'
+    getContestSubmissions
+} from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 
 const props = defineProps<{ contest?: contestDetail | null }>()
 
 const route = useRoute()
 const router = useRouter()
-const contestStore = useContestStore()
-
 const contestId = computed(() => String(route.params.contestId ?? ''))
 
 const submissions = ref<contestSubmission[]>([])
@@ -37,7 +35,7 @@ const loadSubmissions = async () => {
 
     loading.value = true
     try {
-        const data = await contestStore.getContestSubmissions({
+        const data = await getContestSubmissions({
             contestId: contestId.value,
             page: page.value,
             size: size.value,

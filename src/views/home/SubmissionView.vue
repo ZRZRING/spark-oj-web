@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import {useRoute} from 'vue-router'
-import {type submissionDetail, useSubmissionStore} from '@/stores/submission.ts'
+import {type submissionDetail, getSubmission} from '@/api/submission.ts'
 import HighlightCode from '@/components/HighlightCode.vue'
 import AiChatCard from '@/components/AiChatCard.vue'
 
 const route = useRoute()
-const submissionStore = useSubmissionStore()
-
 const loading = ref(true)
 const submission = ref<submissionDetail | null>(null)
 
@@ -48,7 +46,7 @@ let pollTimer: ReturnType<typeof setInterval> | null = null
 
 const fetchSubmission = async () => {
     try {
-        submission.value = await submissionStore.getSubmission(submissionId)
+        submission.value = await getSubmission(submissionId)
     } finally {
         loading.value = false
     }
@@ -62,7 +60,7 @@ const startPolling = () => {
             return
         }
         try {
-            submission.value = await submissionStore.getSubmission(submissionId)
+            submission.value = await getSubmission(submissionId)
         } catch {
             stopPolling()
         }

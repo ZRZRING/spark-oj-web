@@ -1,6 +1,5 @@
-import { defineStore } from "pinia";
 import service from "@/utils/service.ts";
-import type { pageInfoReq, pageInfoRes, response } from "@/stores/type.ts";
+import type { pageInfoReq, pageInfoRes, response } from "@/api/type.ts";
 
 export interface submission {
     submissionId: string;
@@ -28,16 +27,12 @@ export interface submissionDetail extends submission {
 
 export interface getSubmissionRes extends response<submissionDetail> {}
 
-export const useSubmissionStore = defineStore("submission", () => {
-    const getSubmissions = async (req: getSubmissionsReq) => {
-        const res = await service.get<getSubmissionsReq, getSubmissionsRes>("/submissions", { params: req });
-        return res.data!;
-    };
+export const getSubmissions = async (req: getSubmissionsReq) => {
+    const res = await service.get<getSubmissionsReq, getSubmissionsRes>("/submissions", { params: req });
+    return res.data!;
+};
 
-    const getSubmission = async (submissionId: string) => {
-        const res = await service.get<null, getSubmissionRes>(`/submission/${submissionId}`);
-        return res.data!;
-    };
-
-    return { getSubmissions, getSubmission };
-});
+export const getSubmission = async (submissionId: string) => {
+    const res = await service.get<null, getSubmissionRes>(`/submission/${submissionId}`);
+    return res.data!;
+};

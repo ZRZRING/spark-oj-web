@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { type contestDetail, type rankingItem, useContestStore } from '@/stores/contest.ts'
+import { type contestDetail, type rankingItem, getContestRanking, getContestProblems } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 import { getRankingStatusStyle, RankingProblemStatus } from '@/utils/enum.ts'
 
 const props = defineProps<{ contest?: contestDetail | null }>()
 
 const route = useRoute()
-const contestStore = useContestStore()
-
 const contestId = computed(() => String(route.params.contestId ?? ''))
 const loading = ref(false)
 const ranking = ref<rankingItem[]>([])
@@ -61,8 +59,8 @@ const loadRanking = async (contestId: string) => {
     loading.value = true
     try {
         const [problemsData, rankingData] = await Promise.all([
-            contestStore.getContestProblems(contestId),
-            contestStore.getContestRanking(contestId)
+            getContestProblems(contestId),
+            getContestRanking(contestId)
         ])
         problemCount.value = problemsData.problems?.length ?? 0
         ranking.value = rankingData

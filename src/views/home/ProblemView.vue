@@ -6,16 +6,13 @@ import ContestInfoCard from '@/components/ContestInfoCard.vue'
 import {ElMessage} from 'element-plus'
 import {computed, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {type problemDetail, useProblemStore} from '@/stores/problem.ts'
-import {type contestDetail, type contestProblemDetail, useContestStore} from '@/stores/contest.ts'
-import {useCoreStore} from '@/stores/core.ts'
+import {type problemDetail, getProblemDetail} from '@/api/problem.ts'
+import {type contestDetail, type contestProblemDetail, getContestDetail, getContestProblemInfo} from '@/api/contest.ts'
+import {submitCode} from '@/api/core.ts'
 import {useUserStore} from '@/stores/user.ts'
 
 const route = useRoute()
 const router = useRouter()
-const problemStore = useProblemStore()
-const contestStore = useContestStore()
-const coreStore = useCoreStore()
 const userStore = useUserStore()
 
 const problemId = computed(() => String(route.params.problemId ?? '1000'))
@@ -71,14 +68,14 @@ const loadProblem = async () => {
         if (contestId.value) {
             // 比赛模式：并行加载比赛信息和比赛题目
             const [contest, problem] = await Promise.all([
-                contestStore.getContestDetail(contestId.value),
-                contestStore.getContestProblemInfo(contestId.value, problemId.value),
+                getContestDetail(contestId.value),
+                getContestProblemInfo(contestId.value, problemId.value),
             ])
             contestInfo.value = contest
             contestProblemInfo.value = problem
         } else {
             // 普通模式
-            const detail = await problemStore.getProblemDetail({problemId: problemId.value})
+            const detail = await getProblemDetail({problemId: problemId.value})
             problemInfo.value = {
                 ...detail,
                 problemId: problemId.value,
@@ -106,7 +103,7 @@ const handleSubmit = async (code: string, language: string) => {
 
     submitLoading.value = true
     try {
-        const result = await coreStore.submitCode({
+        const result = await submitCode({
             code,
             username: userStore.username!,
             problemId: problemId.value,

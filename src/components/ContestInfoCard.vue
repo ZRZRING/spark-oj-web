@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {Calendar, List, Unlock} from '@element-plus/icons-vue'
-import {type contestDetail} from '@/stores/contest.ts'
+import {type contestDetail} from '@/api/contest.ts'
 
 const props = withDefaults(defineProps<{
     contest: contestDetail | null

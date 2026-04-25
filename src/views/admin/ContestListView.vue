@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import type { pageInfoReq } from '@/stores/type'
+import type { pageInfoReq } from '@/api/type'
 import { useRouter } from 'vue-router'
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
-import { type getContestsData, type contest, useContestStore } from '@/stores/contest.ts'
+import { type getContestsData, type contest, getContests } from '@/api/contest.ts'
 import type { TableInstance } from 'element-plus'
 import dayjs from 'dayjs'
 
 const router = useRouter()
-const contestStore = useContestStore()
-
 const {
     request: pageInfo,
     items: adminContestSet,
@@ -23,7 +21,7 @@ const {
         page: 1,
         size: 50,
     },
-    fetcher: (request) => contestStore.getContests(request),
+    fetcher: (request) => getContests(request),
     selectItems: (data) => data.contests,
     selectTotal: (data) => data.total,
 })

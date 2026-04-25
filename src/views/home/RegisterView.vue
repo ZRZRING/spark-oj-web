@@ -5,7 +5,8 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { Notify } from "@/utils/notify.ts";
 import { TEXT } from "@/config/zh-cn.ts";
-import {type registerReq, useUserStore} from "@/stores/user.ts";
+import { type registerReq, register as registerApi } from "@/api/user.ts";
+import { useUserStore } from "@/stores/user.ts";
 import { MAX_PASSWORD, MAX_USERNAME, MIN_PASSWORD, MIN_USERNAME } from "@/utils/consts.ts";
 
 const router = useRouter();
@@ -66,7 +67,7 @@ const register = async () => {
     try {
         await registerFormRef.value.validate();
         loading.value = true;
-        await userStore.register(registerForm);
+        await registerApi(registerForm);
         await router.push('/');
         Notify.success(TEXT.registerSuccess)
     } catch (error) {

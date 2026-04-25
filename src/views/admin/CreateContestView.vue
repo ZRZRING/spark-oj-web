@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import CodeEditor from '@/components/CodeEditor.vue'
-import { useContestStore } from '@/stores/contest'
-import { useProblemStore } from '@/stores/problem'
+import { getContestDetail, createContest, updateContest } from '@/api/contest'
+import { getProblems } from '@/api/problem'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import type { problem } from '@/stores/problem'
+import type { problem } from '@/api/problem'
 
 const router = useRouter()
 const route = useRoute()
-const contestStore = useContestStore()
-const problemStore = useProblemStore()
 const userStore = useUserStore()
 
 const contestData = ref({
@@ -41,7 +39,7 @@ const searchProblemLoading = ref(false)
 const searchProblems = async (query: string) => {
     loading.value = true
     try {
-        const res = await problemStore.getProblems({ page: 1, size: 50 })
+        const res = await getProblems({ page: 1, size: 50 })
         const keyword = query.trim().toLowerCase()
         if (keyword) {
             problemList.value = res.problems.filter(p => 
@@ -63,7 +61,7 @@ const loadContestDetail = async () => {
     const contestId = route.params.contestId as string
     initLoading.value = true
     try {
-        const data = await contestStore.getContestDetail(contestId)
+        const data = await getContestDetail(contestId)
         contestData.value = {
             contestId: data.contestId,
             title: data.title,
@@ -112,13 +110,13 @@ const handleSubmit = async () => {
         }
 
         if (isEditMode.value) {
-            await contestStore.updateContest(contestData.value.contestId, {
+            await updateContest(contestData.value.contestId, {
                 ...reqData,
                 timeRequired: !contestData.value.practice, // based on API design UpdateReq -> timeRequired
             })
             ElMessage.success('比赛更新成功')
         } else {
-            await contestStore.createContest({
+            await createContest({
                 ...reqData,
                 practice: contestData.value.practice, // based on API design CreateReq -> practice
             })
