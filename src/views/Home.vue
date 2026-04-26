@@ -10,7 +10,7 @@ import FooterItem from '@/components/FooterItem.vue'
         <el-header class="header">
             <HeaderItem />
         </el-header>
-        <el-main class="main">
+        <el-main class="body">
             <router-view />
         </el-main>
         <el-footer class="footer">
@@ -22,10 +22,15 @@ import FooterItem from '@/components/FooterItem.vue'
 <style scoped>
 .container {
     width: 100%;
+    min-height: 100vh;
+}
+
+.body {
+    flex: 1;
 }
 
 .header,
-.main,
+.body,
 .footer {
     padding: 0;
 }
