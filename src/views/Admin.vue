@@ -2,22 +2,23 @@
 import FooterItem from '@/components/FooterItem.vue'
 import AdminSidebarItem from '@/components/AdminSidebarItem.vue'
 import HeaderItem from '@/components/HeaderItem.vue'
-import AdminHeaderItem from '@/components/AdminHeaderItem.vue'
 
 </script>
 
 <template>
-    <el-container class="container">
-        <AdminSidebarItem />
-        <el-container>
+    <el-container class="container" direction="vertical">
+        <el-header class="header">
             <HeaderItem />
+        </el-header>
+        <el-container>
+            <AdminSidebarItem />
             <el-main class="main">
                 <router-view />
             </el-main>
-            <el-footer class="footer">
-                <FooterItem />
-            </el-footer>
         </el-container>
+        <el-footer class="container">
+            <FooterItem />
+        </el-footer>
     </el-container>
 </template>
 
@@ -26,8 +27,9 @@ import AdminHeaderItem from '@/components/AdminHeaderItem.vue'
     width: 100%;
 }
 
+.header,
 .main,
-.footer {
+.container {
     padding: 0;
 }
 </style>

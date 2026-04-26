@@ -6,7 +6,7 @@ import FooterItem from '@/components/FooterItem.vue'
 </script>
 
 <template>
-    <el-container class="container">
+    <el-container class="container" direction="vertical">
         <el-header class="header">
             <HeaderItem />
         </el-header>
@@ -22,10 +22,6 @@ import FooterItem from '@/components/FooterItem.vue'
 <style scoped>
 .container {
     width: 100%;
-}
-
-.main-container {
-    margin: 20px;
 }
 
 .header,

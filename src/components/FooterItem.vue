@@ -36,7 +36,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="footer">
+    <div class="footer-content">
         <el-breadcrumb separator="/">
             <el-breadcrumb-item id="localtime">{{ nowTime }}</el-breadcrumb-item>
             <el-breadcrumb-item id="introduce">介绍</el-breadcrumb-item>
@@ -53,12 +53,41 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.footer {
+.footer-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 20px;
-    padding: 10px 0;
+    padding: 30px 0;
+    background-color: #34393e;
+    color: #fff;
+    font-size: 13px;
+}
+
+.footer-content :deep(.el-breadcrumb__inner),
+.footer-content :deep(.el-breadcrumb__inner a),
+.footer-content :deep(.el-breadcrumb__inner.is-link) {
+    color: #adb5bd !important;
+    font-weight: normal !important;
+}
+
+.footer-content :deep(.el-breadcrumb__inner:hover),
+.footer-content :deep(.el-breadcrumb__inner a:hover),
+.footer-content :deep(.el-breadcrumb__inner.is-link:hover) {
+    color: #fff !important;
+}
+
+.footer-content :deep(.el-breadcrumb__separator) {
+    color: #6c757d !important;
+}
+
+.footer-content :deep(.el-link) {
+    color: #adb5bd !important;
+    font-size: 13px;
+}
+
+.footer-content :deep(.el-link:hover) {
+    color: #fff !important;
 }
 </style>
