@@ -6,6 +6,10 @@ export interface problem {
     title: string;
     judgeType: string;
     rating: number;
+    acceptCount: number;
+    submitCount: number;
+    createBy: string;
+    createTime: string;
 }
 
 export interface problemDetail extends problem {

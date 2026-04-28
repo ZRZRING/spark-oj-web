@@ -189,19 +189,19 @@ const handleVisibleSwitchChange = (problemId: string, value: string | number | b
                     {{ row.judgeType }}
                 </template>
             </el-table-column>
-            <el-table-column label="AC(人数)/提交" width="140">
-                <template #default>
-                    -
+            <el-table-column label="通过/提交 (人数)" width="140">
+                <template #default="{ row }">
+                    {{ row.acceptCount }}/{{ row.submitCount }}
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" width="170">
-                <template #default>
-                    -
+                <template #default="{ row }">
+                    {{ row.createTime }}
                 </template>
             </el-table-column>
             <el-table-column label="创建人" width="100">
-                <template #default>
-                    -
+                <template #default="{ row }">
+                    {{ row.createBy }}
                 </template>
             </el-table-column>
             <el-table-column label="前台可见" width="110" align="center">
