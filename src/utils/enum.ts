@@ -72,3 +72,8 @@ export function getRankingStatusStyle(status: string): { bg: string; color: stri
             return { bg: '#f5f5f5', color: '#999' }
     }
 }
+
+export enum ContestVisibility {
+    Public = "Public",
+    Private = "Private",
+}

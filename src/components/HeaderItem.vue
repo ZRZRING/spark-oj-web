@@ -2,9 +2,8 @@
 
 import { computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessageBox, ElNotification } from 'element-plus';
-import { SwitchButton, ArrowDown } from '@element-plus/icons-vue'
-import { TEXT } from "@/config/zh-cn.ts";
+import { ElMessageBox, ElNotification } from 'element-plus'
+import { TEXT } from "@/config/zh-cn.ts"
 import { useUserStore } from "@/stores/user.ts";
 
 const userStore = useUserStore();
@@ -129,21 +128,17 @@ const onCommand = async (command: string) => {
             <el-menu-item index="contests">比赛</el-menu-item>
         </el-menu>
         <div class="actions">
-            <el-dropdown v-if="userStore.isLoggedIn" placement="bottom-end" trigger="click" @command="onCommand">
-                <span class="el-dropdown-link">
-                    个人中心
-                    <el-icon class="el-icon--right">
-                        <ArrowDown />
-                    </el-icon>
+            <template v-if="userStore.isLoggedIn">
+                <span class="user-info">
+                    {{ userStore.username }}
+                    <el-tag size="small" :type="userStore.adminRole === 'root' ? 'danger' : userStore.adminRole === 'admin' ? 'warning' : 'info'">
+                        {{ userStore.adminRole || 'user' }}
+                    </el-tag>
                 </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="profile">个人资料</el-dropdown-item>
-                        <el-dropdown-item v-if="userStore.isAdmin" command="admin">后台管理</el-dropdown-item>
-                        <el-dropdown-item divided command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+                <!-- <el-button text @click="onCommand('profile')">个人资料</el-button> -->
+                <el-button v-if="userStore.isAdmin" text @click="onCommand('admin')">后台管理</el-button>
+                <el-button text type="danger" @click="onCommand('logout')">退出登录</el-button>
+            </template>
             <template v-else>
                 <el-button round @click="handleLogin">登录</el-button>
                 <el-button round @click="handleRegister">注册</el-button>
@@ -178,22 +173,15 @@ const onCommand = async (command: string) => {
     margin: 0 20px;
     display: flex;
     align-items: center;
+    gap: 4px;
 }
 
-.el-dropdown-link {
-    cursor: pointer;
-    color: var(--el-color-primary);
+.user-info {
     display: flex;
     align-items: center;
-    border: 1px solid var(--el-border-color);
-    border-radius: var(--el-border-radius-round);
-    padding: 8px 14px;
-    transition: all .2s ease;
-}
-
-.el-dropdown-link:hover {
-    color: var(--el-color-primary-dark-2);
-    border-color: var(--el-color-primary-light-5);
-    background: var(--el-color-primary-light-9);
+    gap: 6px;
+    font-size: 14px;
+    color: var(--el-text-color-regular);
+    margin-right: 4px;
 }
 </style>

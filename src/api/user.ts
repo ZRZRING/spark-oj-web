@@ -39,7 +39,7 @@ export interface getProfileData extends profile {}
 
 export interface getProfileRes extends response<getProfileData> {}
 
-export type userRole = 'admin' | 'user';
+export type userRole = 'root' | 'admin' | 'user' | 'locked';
 
 export interface getAdminProtectedReq {}
 

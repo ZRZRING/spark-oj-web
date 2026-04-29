@@ -7,6 +7,8 @@ export interface contest {
     practice: boolean;
     startTime: string;
     endTime: string;
+    createBy: string;
+    visibility: string;
 }
 
 export interface contestDetail {

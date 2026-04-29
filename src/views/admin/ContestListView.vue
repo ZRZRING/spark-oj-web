@@ -5,6 +5,7 @@ import { ElNotification, ElMessageBox } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { type getContestsData, type contest, getContests } from '@/api/contest.ts'
+import { ContestVisibility } from '@/utils/enum.ts'
 import type { TableInstance } from 'element-plus'
 import dayjs from 'dayjs'
 
@@ -111,6 +112,14 @@ const formatTime = (time: string) => {
             <el-table-column type="selection" width="48" />
             <el-table-column prop="contestId" label="比赛编号" width="100" />
             <el-table-column prop="title" label="比赛标题" min-width="280" />
+            <el-table-column prop="createBy" label="创建者" width="120" />
+            <el-table-column label="可见度" width="100" align="center">
+                <template #default="{ row }">
+                    <el-tag :type="row.visibility === ContestVisibility.Public ? 'success' : 'warning'" size="small">
+                        {{ row.visibility }}
+                    </el-tag>
+                </template>
+            </el-table-column>
             <el-table-column label="训练模式" width="120" align="center">
                 <template #default="{ row }">
                     <el-tag :type="row.practice ? 'success' : 'primary'">
