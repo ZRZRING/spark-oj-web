@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import CodeEditor from '@/components/CodeEditor.vue'
-import { getContestDetail, createContest, updateContest } from '@/api/contest'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
+import { getContestDetail, getContestProblems, createContest, updateContest } from '@/api/contest'
 import { getProblems } from '@/api/problem'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { problem } from '@/api/problem'
 
@@ -62,15 +63,16 @@ const loadContestDetail = async () => {
     initLoading.value = true
     try {
         const data = await getContestDetail(contestId)
+        const problemsData = await getContestProblems(contestId)
         contestData.value = {
             contestId: data.contestId,
             title: data.title,
-            practice: false, // In getContestDetail this field might be absent, handled manually if needed
-            startTime: data.startTime ? new Date(data.startTime * 1000).toISOString() : '',
-            endTime: data.endTime ? new Date(data.endTime * 1000).toISOString() : '',
-            lockTime: data.lockTime ? new Date(data.lockTime * 1000).toISOString() : '',
+            practice: false,
+            startTime: data.startTime ? new Date(data.startTime).toISOString() : '',
+            endTime: data.endTime ? new Date(data.endTime).toISOString() : '',
+            lockTime: data.lockTime ? new Date(data.lockTime).toISOString() : '',
             description: data.description,
-            problems: data.problems ? data.problems.map(String) : [],
+            problems: problemsData.problems ? problemsData.problems.map(p => String(p.problemId)) : [],
             password: ''
         }
         
@@ -130,10 +132,29 @@ const handleSubmit = async () => {
     }
 }
 
-onMounted(() => {
-    searchProblems('')
-    loadContestDetail()
-})
+const resetForm = () => {
+    contestData.value = {
+        contestId: '',
+        title: '',
+        practice: false,
+        startTime: '',
+        endTime: '',
+        lockTime: '',
+        description: '',
+        problems: [] as string[],
+        password: ''
+    }
+}
+
+watch(
+    () => route.params.contestId,
+    () => {
+        resetForm()
+        searchProblems('')
+        loadContestDetail()
+    },
+    { immediate: true }
+)
 </script>
 
 <template>
@@ -226,12 +247,21 @@ onMounted(() => {
 
                 <el-col :span="24">
                     <el-form-item label="比赛说明 (Markdown)" prop="description">
-                        <CodeEditor
-                            v-model="contestData.description"
-                            language="markdown"
-                            :height="300"
-                            placeholder="支持 Markdown 格式"
-                        />
+                        <div class="description-editor">
+                            <CodeEditor
+                                v-model="contestData.description"
+                                language="markdown"
+                                :height="300"
+                                placeholder="支持 Markdown 和 LaTeX 格式"
+                            />
+                            <div class="preview-panel">
+                                <div class="preview-header">预览</div>
+                                <div class="preview-body">
+                                    <MarkdownRenderer v-if="contestData.description" :content="contestData.description" />
+                                    <span v-else class="preview-placeholder">在左侧输入内容后可在此预览</span>
+                                </div>
+                            </div>
+                        </div>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -254,5 +284,47 @@ onMounted(() => {
 
 .title {
     font-weight: 600;
+}
+
+.description-editor {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.description-editor > :first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-panel {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.preview-header {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--el-text-color-secondary);
+    background: var(--el-fill-color-lighter);
+    border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.preview-body {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.preview-placeholder {
+    color: var(--el-text-color-placeholder);
+    font-size: 14px;
 }
 </style>
