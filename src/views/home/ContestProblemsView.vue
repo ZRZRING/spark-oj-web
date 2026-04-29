@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { type contestDetail, type contestProblem, getContestProblems } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 
 const props = defineProps<{ contest: contestDetail | null }>()
 
@@ -40,7 +41,7 @@ watch(contestId, (contestId) => loadProblems(contestId), { immediate: true })
         </div>
 
         <div v-if="props.contest?.description" style="margin-bottom: 20px; padding: 0 16px;">
-            <el-text>{{ props.contest.description }}</el-text>
+            <MarkdownRenderer :content="props.contest.description" />
         </div>
 
         <el-table :data="problems" stripe>

@@ -106,6 +106,12 @@ const handleReset = (): void => {
                 </template>
             </el-table-column>
 
+            <el-table-column label="通过/提交" width="140">
+                <template #default="{ row }">
+                    {{ row.acceptCount }}/{{ row.submitCount }}
+                </template>
+            </el-table-column>
+
             <el-table-column label="Type" width="180">
                 <template #default="{ row }">
                     {{ row.judgeType }}
