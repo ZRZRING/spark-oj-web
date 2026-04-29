@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import CodeEditor from '@/components/CodeEditor.vue'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import { getProblemDetail, createProblem, updateProblem } from '@/api/problem'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { JUDGE_TYPE_OPTIONS } from "@/utils/enum.ts";
 
@@ -99,9 +100,26 @@ const handleSubmit = async () => {
     }
 }
 
-onMounted(() => {
-    loadProblemDetail()
-})
+const resetForm = () => {
+    problem.value = {
+        problemId: '',
+        title: '',
+        timeLimit: 1000,
+        memoryLimit: 1024,
+        rating: 800,
+        judgeType: '',
+        content: '',
+    }
+}
+
+watch(
+    () => route.params.problemId,
+    () => {
+        resetForm()
+        loadProblemDetail()
+    },
+    { immediate: true }
+)
 </script>
 
 <template>
@@ -148,12 +166,21 @@ onMounted(() => {
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="题面 (Markdown)" prop="content">
-                        <CodeEditor
-                            v-model="problem.content"
-                            language="markdown"
-                            :height="420"
-                            placeholder="请输入题目内容，支持 Markdown 格式"
-                        />
+                        <div class="description-editor">
+                            <CodeEditor
+                                v-model="problem.content"
+                                language="markdown"
+                                :height="420"
+                                placeholder="请输入题目内容，支持 Markdown 和 LaTeX 格式"
+                            />
+                            <div class="preview-panel">
+                                <div class="preview-header">预览</div>
+                                <div class="preview-body">
+                                    <MarkdownRenderer v-if="problem.content" :content="problem.content" />
+                                    <span v-else class="preview-placeholder">在左侧输入内容后可在此预览</span>
+                                </div>
+                            </div>
+                        </div>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -176,5 +203,47 @@ onMounted(() => {
 
 .title {
     font-weight: 600;
+}
+
+.description-editor {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.description-editor > :first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-panel {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.preview-header {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--el-text-color-secondary);
+    background: var(--el-fill-color-lighter);
+    border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.preview-body {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    max-height: 420px;
+}
+
+.preview-placeholder {
+    color: var(--el-text-color-placeholder);
+    font-size: 14px;
 }
 </style>
