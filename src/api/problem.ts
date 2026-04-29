@@ -35,13 +35,13 @@ export interface getProblemDetailData extends problemDetail {}
 
 export interface getProblemDetailRes extends response<getProblemDetailData> {}
 
-export interface createProblemReq extends Omit<problemDetail, "problemId"> {}
+export interface createProblemReq extends Omit<problemDetail, "problemId" | "createTime" | "acceptCount" | "submitCount"> {}
 
 export interface createProblemData {}
 
 export interface createProblemRes extends response<createProblemData> {}
 
-export interface updateProblemReq extends Omit<problemDetail, "createBy"> {}
+export interface updateProblemReq extends Omit<problemDetail, "createBy" | "createTime" | "acceptCount" | "submitCount"> {}
 
 export interface updateProblemData {}
 
