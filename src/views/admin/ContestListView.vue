@@ -129,12 +129,12 @@ const formatTime = (time: string) => {
             </el-table-column>
             <el-table-column label="开始时间" width="180">
                 <template #default="{ row }">
-                    {{ formatTime(row.startTime) }}
+                    {{ row.practice ? '-' : formatTime(row.startTime) }}
                 </template>
             </el-table-column>
             <el-table-column label="结束时间" width="180">
                 <template #default="{ row }">
-                    {{ formatTime(row.endTime) }}
+                    {{ row.practice ? '-' : formatTime(row.endTime) }}
                 </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="180">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { Calendar, Clock, Lock, Search, Trophy } from '@element-plus/icons-vue'
+import { Calendar, Clock, Lock, Notebook, Search, Trophy } from '@element-plus/icons-vue'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -26,7 +26,7 @@ const {
 })
 
 const ruleFilter = ref<'all' | 'practice' | 'regular'>('all')
-const statusFilter = ref<'all' | 'running' | 'ended'>('all')
+const statusFilter = ref<'all' | 'waiting' | 'running' | 'ended'>('all')
 const keyword = ref('')
 
 const parseDate = (value: string): Date | null => {
@@ -40,6 +40,14 @@ const isEnded = (item: contest): boolean => {
     const end = parseDate(item.endTime)
     if (!end) return false
     return Date.now() >= end.getTime()
+}
+
+const isRunning = (item: contest): boolean => {
+    const start = parseDate(item.startTime)
+    const end = parseDate(item.endTime)
+    if (!start || !end) return false
+    const now = Date.now()
+    return now >= start.getTime() && now < end.getTime()
 }
 
 const formatDuration = (item: contest): string => {
@@ -67,9 +75,11 @@ const filteredContests = computed(() => {
             || (ruleFilter.value === 'regular' && !item.practice)
 
         const currentEnded = isEnded(item)
+        const currentRunning = isRunning(item)
         const hitStatus = statusFilter.value === 'all'
             || (statusFilter.value === 'ended' && currentEnded)
-            || (statusFilter.value === 'running' && !currentEnded)
+            || (statusFilter.value === 'running' && currentRunning)
+            || (statusFilter.value === 'waiting' && !currentEnded && !currentRunning)
 
         return hitKeyword && hitRule && hitStatus
     })
@@ -92,6 +102,7 @@ const filteredContests = computed(() => {
                     </el-select>
                     <el-select v-model="statusFilter" placeholder="Status" style="width: 120px;">
                         <el-option label="Status" value="all" />
+                        <el-option label="Waiting" value="waiting" />
                         <el-option label="Running" value="running" />
                         <el-option label="Ended" value="ended" />
                     </el-select>
@@ -111,8 +122,9 @@ const filteredContests = computed(() => {
                 <el-row :gutter="12" justify="space-between" align="middle" style="padding: 16px 0;">
                     <el-col :xs="24" :sm="18">
                         <el-space alignment="flex-start" :size="16">
-                            <el-icon size="28" color="var(--el-color-warning)">
-                                <Trophy />
+                            <el-icon size="28" :color="item.practice ? 'var(--el-color-success)' : 'var(--el-color-warning)'">
+                                <Notebook v-if="item.practice" />
+                                <Trophy v-else />
                             </el-icon>
                             <el-space direction="vertical" :size="6" alignment="flex-start">
                                 <el-space :size="6" alignment="center">
@@ -120,23 +132,25 @@ const filteredContests = computed(() => {
                                     <el-icon v-if="!item.practice"><Lock /></el-icon>
                                 </el-space>
                                 <el-space wrap :size="12">
-                                    <el-text size="small" type="info">
-                                        <el-icon><Calendar /></el-icon>
-                                        {{ item.startTime }}
-                                    </el-text>
-                                    <el-text size="small" type="info">
-                                        <el-icon><Clock /></el-icon>
-                                        {{ formatDuration(item) }}
-                                    </el-text>
-                                    <el-tag size="small" effect="plain">{{ item.practice ? 'Practice' : 'Regular' }}</el-tag>
+                                    <template v-if="!item.practice">
+                                        <el-text size="small" type="info">
+                                            <el-icon><Calendar /></el-icon>
+                                            {{ item.startTime }}
+                                        </el-text>
+                                        <el-text size="small" type="info">
+                                            <el-icon><Clock /></el-icon>
+                                            {{ formatDuration(item) }}
+                                        </el-text>
+                                    </template>
+                                    <el-tag v-if="!item.practice" size="small" effect="plain">Regular</el-tag>
                                 </el-space>
                             </el-space>
                         </el-space>
                     </el-col>
                     <el-col :xs="24" :sm="6" style="text-align: right;">
-                        <el-tag :type="isEnded(item) ? 'info' : 'success'" effect="light">
-                            <el-badge is-dot :type="isEnded(item) ? 'danger' : 'success'" style="margin-right: 8px;" />
-                            {{ isEnded(item) ? 'Ended' : 'Running' }}
+                        <el-tag v-if="!item.practice" :type="isEnded(item) ? 'info' : isRunning(item) ? 'success' : ''" effect="light">
+                            <el-badge is-dot :type="isEnded(item) ? 'danger' : isRunning(item) ? 'success' : 'primary'" style="margin-right: 8px;" />
+                            {{ isEnded(item) ? 'Ended' : isRunning(item) ? 'Running' : 'Waiting' }}
                         </el-tag>
                     </el-col>
                 </el-row>

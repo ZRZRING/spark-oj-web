@@ -65,8 +65,8 @@ watch(contestId, (contestId) => loadProblems(contestId), { immediate: true })
             </el-table-column>
 
             <el-table-column label="正确/提交次数" width="140">
-                <template #default>
-                    - / -
+                <template #default="{ row }">
+                    {{ row.acceptCount }}/{{ row.submitCount }}
                 </template>
             </el-table-column>
         </el-table>

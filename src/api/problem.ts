@@ -69,10 +69,25 @@ export const updateProblem = async (req: updateProblemReq): Promise<updateProble
 
 export const uploadTestcases = async (problemId: string, files: File[]) => {
     const formData = new FormData()
-    files.forEach(file => formData.append('test_cases', file))
-    formData.append('problem_id', problemId)
+    files.forEach(file => formData.append('testcases', file))
+    formData.append('problemId', problemId)
     const res = await service.post<null, response<{ path: string }>>("/upload/testcases", formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     })
     return res.data!
+};
+
+export interface testcaseItem {
+    name: string;
+    inputSize: number;
+    outputSize: number;
+}
+
+export const getTestcases = async (problemId: string): Promise<testcaseItem[]> => {
+    const res = await service.get<null, response<{ testcases: testcaseItem[] }>>(`/testcases/${problemId}`);
+    return res.data?.testcases ?? [];
+};
+
+export const deleteTestcase = async (problemId: string, name: string): Promise<void> => {
+    await service.delete<null, response<void>>(`/testcases/${problemId}/${name}`);
 };

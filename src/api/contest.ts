@@ -28,6 +28,8 @@ export interface contestProblem {
     judgeType: string;
     timeLimit: number;
     memoryLimit: number;
+    submitCount: number;
+    acceptCount: number;
 }
 
 export interface contestProblemDetail {

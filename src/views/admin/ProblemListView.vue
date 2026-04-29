@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElNotification } from 'element-plus'
 import { usePagedList } from '@/composables/usePagedList'
 import { computed, ref } from 'vue'
-import { type getProblemsData, type problem, getProblems, uploadTestcases } from '@/api/problem.ts'
+import { type getProblemsData, type problem, getProblems, uploadTestcases, getTestcases, deleteTestcase, type testcaseItem } from '@/api/problem.ts'
 import type { TableInstance, UploadFile, UploadRawFile } from 'element-plus'
 
 const router = useRouter()
@@ -65,11 +65,45 @@ const testcaseDialogVisible = ref(false)
 const testcaseProblemId = ref('')
 const testcaseFiles = ref<UploadFile[]>([])
 const testcaseUploading = ref(false)
+const existingTestcases = ref<testcaseItem[]>([])
+const testcaseLoading = ref(false)
+
+const formatSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB'
+}
+
+const formatIOFile = (name: string): string => {
+    return name + '.in/' + name + '.out'
+}
+
+const loadExistingTestcases = async () => {
+    testcaseLoading.value = true
+    try {
+        existingTestcases.value = await getTestcases(testcaseProblemId.value)
+    } catch {
+        existingTestcases.value = []
+    } finally {
+        testcaseLoading.value = false
+    }
+}
 
 const handleTestData = (problemId: string) => {
     testcaseProblemId.value = problemId
     testcaseFiles.value = []
     testcaseDialogVisible.value = true
+    loadExistingTestcases()
+}
+
+const handleDeleteTestcase = async (name: string) => {
+    try {
+        await deleteTestcase(testcaseProblemId.value, name)
+        ElMessage.success(`已删除 ${name}`)
+        loadExistingTestcases()
+    } catch (error) {
+        ElMessage.error(error instanceof Error ? error.message : '删除失败')
+    }
 }
 
 const handleExceed = () => {
@@ -100,7 +134,8 @@ const handleUploadTestcases = async () => {
     try {
         await uploadTestcases(testcaseProblemId.value, validFiles)
         ElMessage.success('测试数据上传成功')
-        testcaseDialogVisible.value = false
+        testcaseFiles.value = []
+        loadExistingTestcases()
     } catch (error) {
         ElMessage.error(error instanceof Error ? error.message : '上传失败')
     } finally {
@@ -238,8 +273,8 @@ const handleVisibleSwitchChange = (problemId: string, value: string | number | b
 
     <el-dialog
         v-model="testcaseDialogVisible"
-        :title="`上传测试数据 - 题目 ${testcaseProblemId}`"
-        width="560px"
+        :title="`测试数据 - 题目 ${testcaseProblemId}`"
+        width="620px"
         :close-on-click-modal="false"
     >
         <el-upload
@@ -261,12 +296,43 @@ const handleVisibleSwitchChange = (problemId: string, value: string | number | b
                 </div>
             </template>
         </el-upload>
-        <template #footer>
-            <el-button @click="testcaseDialogVisible = false">取消</el-button>
+        <div style="margin-top: 8px;">
             <el-button type="primary" :loading="testcaseUploading" @click="handleUploadTestcases">
                 上传
             </el-button>
-        </template>
+        </div>
+
+        <el-divider v-if="existingTestcases.length > 0 || testcaseLoading" content-position="left">
+            已有测试数据 ({{ existingTestcases.length }} 组)
+        </el-divider>
+        <el-table
+            v-if="existingTestcases.length > 0 || testcaseLoading"
+            :data="existingTestcases"
+            v-loading="testcaseLoading"
+            size="small"
+            max-height="300"
+        >
+            <el-table-column prop="name" label="文件名称">
+                <template #default="{ row }">
+                    {{ formatIOFile(row.name) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="输入大小" width="100" align="right">
+                <template #default="{ row }">
+                    {{ formatSize(row.inputSize) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="输出大小" width="100" align="right">
+                <template #default="{ row }">
+                    {{ formatSize(row.outputSize) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="80" align="center">
+                <template #default="{ row }">
+                    <el-button type="danger" link size="small" @click="handleDeleteTestcase(row.name)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
     </el-dialog>
 </template>
 
