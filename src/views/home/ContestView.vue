@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { type contestDetail, getContestDetail } from '@/api/contest.ts'
+import { type getContestDetailData, getContestDetail } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 import ContestSidebar from '@/components/ContestSidebar.vue'
 import ContestInfoCard from '@/components/ContestInfoCard.vue'
 
 const route = useRoute()
 const contestId = computed(() => String(route.params.contestId ?? ''))
-const contest = ref<contestDetail | null>(null)
+const contest = ref<getContestDetailData | null>(null)
 const loading = ref(false)
 
 const loadContest = async (contestId: string) => {

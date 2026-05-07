@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { type contestDetail, type rankingItem, getContestRanking, getContestProblems } from '@/api/contest.ts'
+import { type getContestDetailData, type rankingItem, getContestRanking, getContestProblems } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 import { getRankingStatusStyle, RankingProblemStatus } from '@/utils/enum.ts'
 
-const props = defineProps<{ contest?: contestDetail | null }>()
+const props = defineProps<{ contest?: getContestDetailData | null }>()
 
 const route = useRoute()
 const contestId = computed(() => String(route.params.contestId ?? ''))
@@ -63,7 +63,7 @@ const loadRanking = async (contestId: string) => {
             getContestRanking(contestId)
         ])
         problemCount.value = problemsData.problems?.length ?? 0
-        ranking.value = rankingData
+        ranking.value = rankingData.ranking
     } catch {
         Notify.error('获取排行榜失败')
     } finally {

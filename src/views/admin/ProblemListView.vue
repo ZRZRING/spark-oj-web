@@ -81,7 +81,7 @@ const formatIOFile = (name: string): string => {
 const loadExistingTestcases = async () => {
     testcaseLoading.value = true
     try {
-        existingTestcases.value = await getTestcases(testcaseProblemId.value)
+        existingTestcases.value = (await getTestcases(testcaseProblemId.value)).testcases
     } catch {
         existingTestcases.value = []
     } finally {

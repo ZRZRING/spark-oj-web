@@ -7,7 +7,7 @@ import {ElMessage} from 'element-plus'
 import {computed, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {type problemDetail, getProblemDetail} from '@/api/problem.ts'
-import {type contestDetail, type contestProblemDetail, getContestDetail, getContestProblemInfo} from '@/api/contest.ts'
+import {type getContestDetailData, type contestProblemDetail, getContestDetail, getContestProblemInfo} from '@/api/contest.ts'
 import {submitCode} from '@/api/core.ts'
 import {useUserStore} from '@/stores/user.ts'
 
@@ -25,7 +25,7 @@ const contestId = computed(() => {
 const isInContest = computed(() => !!contestId.value)
 
 const problemInfo = ref<problemDetail | null>(null)
-const contestInfo = ref<contestDetail | null>(null)
+const contestInfo = ref<getContestDetailData | null>(null)
 const contestProblemInfo = ref<contestProblemDetail | null>(null)
 
 const loading = ref(false)

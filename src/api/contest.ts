@@ -56,40 +56,6 @@ export interface contestSubmission {
     createTime: string;
 }
 
-export interface getContestSubmissionsReq extends pageInfoReq {
-    contestId: string;
-}
-
-export interface getContestsReq extends pageInfoReq {}
-
-export interface getContestsData extends pageInfoRes {
-    contests: contest[];
-}
-
-export interface getContestsRes extends response<getContestsData> {}
-
-export interface getContestDetailRes extends response<contestDetail> {}
-
-export interface getContestProblemsData extends pageInfoRes {
-    problems: contestProblem[];
-}
-
-export interface getContestProblemsRes extends response<getContestProblemsData> {}
-
-export interface getContestSubmissionsData extends pageInfoRes {
-    submissions: contestSubmission[];
-}
-
-export interface getContestSubmissionsRes extends response<getContestSubmissionsData> {}
-
-export interface getContestProblemInfoRes extends response<contestProblemDetail> {}
-
-export interface problemStatsItem {
-    status: string;
-    rejectCount: number;
-    finishTime: number;
-}
-
 export interface rankingItem {
     username: string;
     score: number;
@@ -97,8 +63,75 @@ export interface rankingItem {
     problems: problemStatsItem[];
 }
 
-export interface getContestRankingRes extends response<{ ranking: rankingItem[] }> {}
+export interface problemStatsItem {
+    status: string;
+    rejectCount: number;
+    finishTime: number;
+}
 
+// 获取比赛列表
+export interface getContestsReq extends pageInfoReq {}
+export interface getContestsRes extends response<getContestsData> {}
+export interface getContestsData extends pageInfoRes {
+    contests: contest[];
+}
+export const getContests = async (req: getContestsReq): Promise<getContestsData> => {
+    const res = await service.get<getContestsReq, getContestsRes>("/contests", { params: req });
+    return res.data!;
+};
+
+// 获取比赛详情
+export interface getContestDetailReq {}
+export interface getContestDetailRes extends response<getContestDetailData> {}
+export interface getContestDetailData extends contestDetail {}
+export const getContestDetail = async (contestId: string): Promise<getContestDetailData> => {
+    const res = await service.get<getContestDetailReq, getContestDetailRes>(`/contest/${contestId}`);
+    return res.data!;
+};
+
+// 获取比赛题目列表
+export interface getContestProblemsReq {}
+export interface getContestProblemsRes extends response<getContestProblemsData> {}
+export interface getContestProblemsData extends pageInfoRes {
+    problems: contestProblem[];
+}
+export const getContestProblems = async (contestId: string): Promise<getContestProblemsData> => {
+    const res = await service.get<getContestProblemsReq, getContestProblemsRes>(`/contest/${contestId}/problems`);
+    return res.data!;
+};
+
+// 获取比赛提交记录
+export interface getContestSubmissionsReq extends pageInfoReq {}
+export interface getContestSubmissionsRes extends response<getContestSubmissionsData> {}
+export interface getContestSubmissionsData extends pageInfoRes {
+    submissions: contestSubmission[];
+}
+export const getContestSubmissions = async (contestId: string, req: getContestSubmissionsReq): Promise<getContestSubmissionsData> => {
+    const res = await service.get<getContestSubmissionsReq, getContestSubmissionsRes>(`/contest/${contestId}/submissions`, { params: req });
+    return res.data!;
+};
+
+// 获取比赛题目详情
+export interface getContestProblemInfoReq {}
+export interface getContestProblemInfoRes extends response<getContestProblemInfoData> {}
+export interface getContestProblemInfoData extends contestProblemDetail {}
+export const getContestProblemInfo = async (contestId: string, problemId: string): Promise<getContestProblemInfoData> => {
+    const res = await service.get<getContestProblemInfoReq, getContestProblemInfoRes>(`/contest/${contestId}/problem/${problemId}`);
+    return res.data!;
+};
+
+// 获取比赛排名
+export interface getContestRankingReq {}
+export interface getContestRankingRes extends response<getContestRankingData> {}
+export interface getContestRankingData {
+    ranking: rankingItem[];
+}
+export const getContestRanking = async (contestId: string): Promise<getContestRankingData> => {
+    const res = await service.get<getContestRankingReq, getContestRankingRes>(`/contest/${contestId}/ranking`);
+    return res.data!;
+};
+
+// 创建比赛
 export interface createContestReq {
     title: string;
     password?: string;
@@ -110,7 +143,12 @@ export interface createContestReq {
     createBy: string;
     lockTime?: string;
 }
+export interface createContestRes extends response<void> {}
+export const createContest = async (req: createContestReq): Promise<void> => {
+    await service.post<createContestReq, createContestRes>("/contest", req);
+};
 
+// 更新比赛
 export interface updateContestReq {
     title: string;
     password?: string;
@@ -122,45 +160,7 @@ export interface updateContestReq {
     createBy: string;
     lockTime?: string;
 }
-
-export const getContests = async (req: getContestsReq): Promise<getContestsData> => {
-    const res = await service.get<getContestsReq, getContestsRes>("/contests", { params: req });
-    return res.data!;
-};
-
-export const getContestDetail = async (contestId: string): Promise<contestDetail> => {
-    const res = await service.get<void, getContestDetailRes>(`/contest/${contestId}`);
-    return res.data!;
-};
-
-export const getContestProblems = async (contestId: string): Promise<getContestProblemsData> => {
-    const res = await service.get<void, getContestProblemsRes>(`/contest/${contestId}/problems`);
-    return res.data!;
-};
-
-export const getContestSubmissions = async (req: getContestSubmissionsReq): Promise<getContestSubmissionsData> => {
-    const { contestId, ...params } = req;
-    const res = await service.get<getContestSubmissionsReq, getContestSubmissionsRes>(
-        `/contest/${contestId}/submissions`,
-        { params },
-    );
-    return res.data!;
-};
-
-export const getContestProblemInfo = async (contestId: string, problemId: string): Promise<contestProblemDetail> => {
-    const res = await service.get<void, getContestProblemInfoRes>(`/contest/${contestId}/problem/${problemId}`);
-    return res.data!;
-};
-
-export const getContestRanking = async (contestId: string): Promise<rankingItem[]> => {
-    const res = await service.get<void, getContestRankingRes>(`/contest/${contestId}/ranking`);
-    return res.data?.ranking ?? [];
-};
-
-export const createContest = async (req: createContestReq): Promise<void> => {
-    await service.post<createContestReq, response<void>>("/contest", req);
-};
-
+export interface updateContestRes extends response<void> {}
 export const updateContest = async (contestId: string, req: updateContestReq): Promise<void> => {
-    await service.put<updateContestReq, response<void>>(`/contest/${contestId}`, req);
+    await service.put<updateContestReq, updateContestRes>(`/contest/${contestId}`, req);
 };

@@ -2,13 +2,14 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-    type contestDetail,
+    type getContestDetailData,
     type contestSubmission,
     getContestSubmissions
 } from '@/api/contest.ts'
+import SubmissionTable from '@/components/SubmissionTable.vue'
 import { Notify } from '@/utils/notify.ts'
 
-const props = defineProps<{ contest?: contestDetail | null }>()
+const props = defineProps<{ contest?: getContestDetailData | null }>()
 
 const route = useRoute()
 const router = useRouter()
@@ -20,23 +21,12 @@ const loading = ref(false)
 const page = ref(1)
 const size = ref(50)
 
-const getResultType = (result: string): '' | 'success' | 'danger' | 'warning' | 'info' => {
-    if (result === 'Accepted') return 'success'
-    if (result === 'Wrong Answer') return 'danger'
-    if (result === 'Time Limit Exceeded') return 'warning'
-    if (result === 'Memory Limit Exceeded') return 'warning'
-    if (result === 'Runtime Error') return 'danger'
-    if (result === 'Compilation Error') return 'info'
-    return ''
-}
-
 const loadSubmissions = async () => {
     if (!contestId.value) return
 
     loading.value = true
     try {
-        const data = await getContestSubmissions({
-            contestId: contestId.value,
+        const data = await getContestSubmissions(contestId.value, {
             page: page.value,
             size: size.value,
         })
@@ -68,53 +58,20 @@ const handleCurrentChange = (newPage: number) => {
 const goToSubmission = (submissionId: string) => {
     router.push(`/submission/${submissionId}`)
 }
+
+const goToProblem = (problemId: string) => {
+    router.push(`/problem/${problemId}?contestId=${contestId.value}`)
+}
 </script>
 
 <template>
-    <el-card shadow="never" v-loading="loading">
-        <el-table :data="submissions" stripe>
-            <el-table-column prop="submissionId" label="提交ID" width="120">
-                <template #default="{ row }">
-                    <el-link type="primary" @click="goToSubmission(row.submissionId)">
-                        {{ row.submissionId }}
-                    </el-link>
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="pid" label="题目ID" width="100">
-                <template #default="{ row }">
-                    <el-link type="primary" @click="router.push(`/problem/${row.pid}?contestId=${contestId}`)">
-                        {{ row.pid }}
-                    </el-link>
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="username" label="用户" width="140" />
-
-            <el-table-column prop="result" label="结果" min-width="160">
-                <template #default="{ row }">
-                    <el-tag :type="getResultType(row.result)" effect="light">
-                        {{ row.result }}
-                    </el-tag>
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="language" label="语言" width="100" />
-
-            <el-table-column prop="timeCost" label="耗时" width="100">
-                <template #default="{ row }">
-                    {{ row.timeCost }} ms
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="memoryCost" label="内存" width="100">
-                <template #default="{ row }">
-                    {{ row.memoryCost }} MB
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="createTime" label="提交时间" width="180" />
-        </el-table>
+    <el-card shadow="never">
+        <SubmissionTable
+            :submissions="submissions"
+            :loading="loading"
+            @click-submission="goToSubmission"
+            @click-problem="goToProblem"
+        />
     </el-card>
 
     <el-pagination v-model:current-page="page" v-model:page-size="size" :page-sizes="[20, 50, 100, 200]" :total="total"

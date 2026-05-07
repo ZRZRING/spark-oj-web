@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { type contestDetail, type contestProblem, getContestProblems } from '@/api/contest.ts'
+import { type getContestDetailData, type contestProblem, getContestProblems } from '@/api/contest.ts'
 import { Notify } from '@/utils/notify.ts'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 
-const props = defineProps<{ contest: contestDetail | null }>()
+const props = defineProps<{ contest: getContestDetailData | null }>()
 
 const route = useRoute()
 const router = useRouter()
